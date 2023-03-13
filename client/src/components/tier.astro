@@ -1,0 +1,93 @@
+---
+import TierBlobs from "./tierBlobs.astro";
+const { id, txt, price, x, y } = Astro.props;
+---
+
+<div class="relative mt-3 flex text-left leading-6 tracking-tight">
+  <input required type="radio" id={id} value={id} name="tier" class="peer invisible absolute m-0 cursor-default list-outside list-none p-0 text-left text-sm text-white opacity-0" />
+  <label for={id} class="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg bg-neutral-700 bg-opacity-[45%] p-[1px] shadow-sm backdrop-blur-md transition-all duration-500 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 peer-checked:!bg-opacity-[100%]">
+    <div class="relative w-full rounded-[calc(0.5rem-1px)] bg-[#050505] bg-opacity-100 p-4">
+      <TierBlobs tier={id} x={x} y={y} />
+      <span class="z-20 flex w-full cursor-pointer justify-between text-center leading-5 tracking-tight">
+        <span class="relative m-0 min-w-0 basis-1/2 cursor-pointer self-center p-0 text-left leading-5 tracking-tight">
+          <span class="cursor-pointer text-left text-2xl font-semibold leading-5 tracking-tight text-white">
+            {id}
+            <span class="relative mt-1 block cursor-pointer text-left text-xs font-normal tracking-normal opacity-70">{txt}</span>
+          </span>
+        </span>
+        <span class="relative m-0 min-w-0 basis-1/2 cursor-pointer self-center p-0 text-right leading-5 tracking-tight">
+          <span class="relative mt-1 block cursor-pointer text-right text-xs font-normal tracking-normal text-white">
+            <span class="cursor-pointer text-right text-xs leading-4 tracking-normal">
+              From
+              <span class="inline-block cursor-pointer whitespace-nowrap text-right text-xs leading-4 tracking-normal">{price}</span>
+            </span>
+          </span>
+        </span>
+      </span>
+    </div>
+  </label>
+</div>
+
+<script>
+  function enableNextSection() {
+    const nextSection = this.parentElement.parentElement.nextElementSibling;
+    if (nextSection) {
+      nextSection.classList.remove("opacity-30");
+      // scroll to the next section centered after 500ms
+      setTimeout(() => {
+        nextSection.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+      const inputs = nextSection.querySelectorAll("input");
+      inputs.forEach((input) => {
+        input.disabled = false;
+      });
+    }
+  }
+  document.querySelectorAll("input:not(#Robux):not(#email):not(#discordid)").forEach((input) => {
+    input.addEventListener("change", enableNextSection);
+  });
+  // Get tier value and add event listener for any changes
+  document.querySelectorAll('input[name="tier"]').forEach((input) => {
+    // enable the next section when the user selects a payment method
+    input.addEventListener("change", () => {
+      // Get the value of the checked radio button
+      let tier = (document.querySelector('input[name="tier"]:checked') as HTMLInputElement).value;
+      // make the price variables global to use in a different javascript file
+
+      let stripeprice;
+      let cryptoprice;
+      let robuxprice;
+      let robloxtxt;
+      // If the value is "Pro"
+      if (tier === "Pro") {
+        stripeprice = "$15.99";
+        cryptoprice = "$13.99";
+        robuxprice = "2,899";
+      }
+      // If the value is "Essential"
+      if (tier === "Essential") {
+        // Set the price to $7.99
+        stripeprice = "$7.99";
+        cryptoprice = "$6.99";
+        robuxprice = "";
+      }
+      // Set the price of the payment method
+      document.getElementById("StripePrice").innerHTML = stripeprice;
+      document.getElementById("CryptoPrice").innerHTML = cryptoprice;
+      document.getElementById("RobuxPrice").innerHTML = robuxprice;
+      const robux = document.getElementById("Robux") as HTMLInputElement;
+      // Disable Robux if the user selects Essential
+      if (tier === "Essential") {
+        // Add the disabled class to the label, label comes after the input
+        robux.nextElementSibling.classList.add("opacity-30");
+      } else {
+        robux.nextElementSibling.classList.remove("opacity-30");
+      }
+
+      // infoMenu
+      const infoMenuTier = document.getElementById("infoMenuTier");
+      // Get the value of the checked radio button
+      infoMenuTier.innerHTML = "Sirius " + tier;
+    });
+  });
+</script>

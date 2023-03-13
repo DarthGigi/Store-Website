@@ -1,0 +1,24 @@
+---
+const { id, title, description } = Astro.props;
+let classes;
+switch (id) {
+  case "payment":
+    classes = "opacity-30";
+    break;
+
+  case "details":
+    classes = "scale-0 opacity-0 hidden";
+    break;
+
+  default:
+    classes = "";
+    break;
+}
+---
+
+<section id={id} class:list={[classes, "w-auto text-left leading-6 tracking-tight transition-all duration-500"]}>
+  <h2 class="m-0 p-0 text-left text-2xl font-semibold tracking-wide">
+    <span class="text-left !font-sfdisplay text-2xl font-semibold leading-7 text-white">{title} <span class="text-left !font-sfdisplay text-2xl font-semibold leading-7 text-neutral-400">{description}</span></span>
+  </h2>
+  <slot />
+</section>

@@ -1,0 +1,92 @@
+<div id="buyDiv" class="relative mt-3 flex justify-end text-right leading-6 tracking-tight">
+  <button id="buy" type="button" class="inline-flex cursor-pointer items-center rounded-full border-0 bg-[#0071e3] px-[15px] py-1 text-center font-normal text-white outline-0 transition-all duration-500 [letter-spacing:-0.01em] hover:bg-[#147ce5]">Buy</button>
+</div>
+
+<script>
+  function toggleLoadingSpinner(isLoading: boolean) {
+    if (isLoading) {
+      submit.classList.add("opacity-70", "cursor-wait", "p-1", "bg-transparent");
+      submit.classList.remove("px-[15px]", "py-1", "bg-[#0071e3]", "hover:bg-[#147ce5]");
+      submit.disabled = true;
+      submit.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+  </svg>`;
+    } else {
+      submit.classList.add("px-[15px]", "py-1", "bg-[#0071e3]", "hover:bg-[#147ce5]");
+      submit.classList.remove("opacity-70", "cursor-wait", "p-1", "bg-transparent");
+      submit.disabled = false;
+      submit.innerHTML = "Buy";
+    }
+  }
+
+  async function submitForm() {
+    try {
+      toggleLoadingSpinner(true);
+
+      const discordid = document.getElementById("discordid") as HTMLInputElement;
+      if (!discordid.value.match(/^(?!(.)\1+$)[0-9]{17,}$/)) {
+        discordid.setCustomValidity("Please enter a valid Discord ID. (e.g. 123456789012345678)");
+        form.reportValidity();
+        setTimeout(() => {
+          discordid.setCustomValidity("");
+        }, 3000);
+        throw new Error("Form is not valid");
+      }
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        throw new Error("Form is not valid");
+      }
+
+      const tierInputs = document.querySelectorAll('input[name="tier"]') as NodeListOf<HTMLInputElement>;
+      const selectedTier = Array.from(tierInputs).find((input) => input.checked)?.value;
+      if (!selectedTier) {
+        throw new Error("No tier selected");
+      }
+
+      const paymentMethodInputs = document.querySelectorAll('input[name="payment"]') as NodeListOf<HTMLInputElement>;
+      const selectedPaymentMethod = Array.from(paymentMethodInputs).find((input) => input.checked)?.value;
+      if (!selectedPaymentMethod) {
+        throw new Error("No payment method selected");
+      }
+
+      const email = emailInput.value;
+      const discordId = discordIdInput.value;
+
+      const response = await fetch("/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tier: selectedTier,
+          paymentMethod: selectedPaymentMethod,
+          email,
+          discordid: discordId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error creating checkout session");
+      }
+
+      const { url } = await response.json();
+      toggleLoadingSpinner(false);
+      window.location.href = url;
+    } catch (error) {
+      toggleLoadingSpinner(false);
+      console.error(error);
+      document.getElementById("error").classList.remove("scale-0", "opacity-0", "blur-md");
+      setTimeout(() => {
+        document.getElementById("error").classList.add("scale-0", "opacity-0", "blur-md");
+      }, 3000);
+    }
+  }
+
+  const submit = document.getElementById("buy") as HTMLButtonElement;
+  const form = document.querySelector("form") as HTMLFormElement;
+  const emailInput = document.getElementById("email") as HTMLInputElement;
+  const discordIdInput = document.getElementById("discordid") as HTMLInputElement;
+  submit.addEventListener("click", submitForm);
+</script>

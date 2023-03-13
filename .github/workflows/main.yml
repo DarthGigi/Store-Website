@@ -1,0 +1,47 @@
+name: Deploy to VPS
+
+on:
+  push:
+    paths:
+      - "client/**"
+      - "server/**"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+
+        # Build the project in client folder
+      - name: Build
+        run: |
+          cd client
+          npm install
+          npm run build
+
+      # Deploy the project to VPS
+      - name: Rsync Deployments Action
+        uses: Burnett01/rsync-deployments@master
+        with:
+          switches: -avzr --exclude=node_modules --exclude=.env --exclude=.envexample --exclude=restart.sh --delete
+          path: ./server/
+          remote_path: ${{ secrets.REMOTE_PATH }}
+          remote_host: ${{ secrets.REMOTE_HOST }}
+          remote_user: ${{ secrets.REMOTE_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          remote_key_pass: ${{ secrets.SSH_PRIVATE_KEY_PASSPHRASE }}
+
+      # Restart the server
+      - name: Restart server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_PORT }}
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}
+            ./restart.sh
