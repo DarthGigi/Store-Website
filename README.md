@@ -1,3 +1,3 @@
-# Sirius Shop
+# Sirius Store
 
-![Sirius Shop](client/public/assets/images/store.png)
+![Sirius Store](client/public/assets/images/store.png)
