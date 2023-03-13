@@ -1,6 +1,7 @@
 ### Project Specific ###
 # Ignore all local history of files
 server/public
+server/restart.sh
 **/.vscode
 
 ### dotenv ###
