@@ -26,7 +26,7 @@ jobs:
       - name: Rsync Deployments Action
         uses: Burnett01/rsync-deployments@master
         with:
-          switches: -avzr --exclude=node_modules --exclude=.env --exclude=.envexample --exclude=restart.sh --delete
+          switches: -avzr --exclude=node_modules --exclude=.env --exclude=.envexample --exclude=restart.sh --exclude=.well-kown --delete
           path: ./server/
           remote_path: ${{ secrets.REMOTE_PATH }}
           remote_host: ${{ secrets.REMOTE_HOST }}
