@@ -1,3 +1,5 @@
+# Domain
+DOMAIN = "https://example.com/"
 # Stripe
 # Stripe API Keys
 STRIPE_PUBLIC_KEY = "PUBLIC_KEY"
