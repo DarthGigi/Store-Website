@@ -6,6 +6,7 @@ server/restart.sh
 
 ### dotenv ###
 .env
+.envtest
 
 ### macOS ###
 # General

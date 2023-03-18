@@ -1,6 +1,8 @@
 // Dotenv for loading .env file
 import dotenv from "dotenv";
-dotenv.config({ path: ".env" });
+//.env for production, .envtest for development
+dotenv.config({ path: `.env${process.env.NODE_ENV ? `${process.env.NODE_ENV}` : ""}` });
+console.log(`Running in ${process.env.NODE_ENV} mode.`);
 // Fetch for sending webhook to discord
 import fetch from "node-fetch";
 // Stripe for handling payments
@@ -17,7 +19,7 @@ import bodyParser from "body-parser";
 // Stripe Setup
 const stripe = stripeModule(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-const DOMAIN = "https://buy.sirius.menu/";
+const DOMAIN = process.env.DOMAIN;
 
 // Coinbase Commerce Setup
 const Client = coinbase.Client;
@@ -139,51 +141,27 @@ app.post("/webhook", bodyParser.raw({ type: "application/json" }), async (req, r
     const session = event.data.object;
     const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
 
-    let discordUser;
     // Store the data in variables for later use when sending the webhook
     // Email
-    let customerEmail;
-    if (session.customer_email == null) {
-      if (session.customer_details.email == null) {
-        customerEmail = "contact@gigi.asap";
-      } else {
-        customerEmail = session.customer_details.email;
-      }
-    } else {
-      customerEmail = session.customer_email;
-    }
-    // Discord ID
-    if (session.metadata.DiscordID == null) {
-      discordUser = "This purchase was probably not made via buy.sirius.menu.";
-      session.metadata.DiscordID = "This purchase was probably not made via buy.sirius.menu.";
-    } else {
-      discordUser = `<@${session.metadata.DiscordID}>`;
-    }
-    // Tier
-    if (session.metadata.Tier == null) {
-      session.metadata.Tier = lineItems.data[0].description;
-    }
-    // Amount Paid
-    if (session.amount_total == null) {
-      session.amount_total = 9999999999;
-    }
-    // Date and Time of Purchase
-    if (session.created == null) {
-      session.created = 0;
-    }
-    // Receipt URL
-    if (receiptUrl == null) {
-      receiptUrl = "https://dashboard.stripe.com/";
-    }
+    const customerEmail = session.customer_email || session.customer_details.email || "contact@gigi.asap";
 
-    // Test Mode or Live Mode
-    if (session.livemode == null) {
-      session.livemode = "| Error";
-    } else if (session.livemode == true) {
-      session.livemode = "";
-    } else if (session.livemode == false) {
-      session.livemode = "| Test Mode: True";
-    }
+    // Discord ID
+    const discordUser = `<@${session.metadata.DiscordID ?? "This purchase was probably not made via buy.sirius.menu."}>`;
+
+    // Tier
+    const tier = session.metadata.Tier || lineItems.data[0].description;
+
+    // Amount Paid
+    const amountPaid = `${session.amount_total == null ? "N/A" : (session.amount_total ?? -1) === -1 ? "Error: Invalid amount" : `$${((session.amount_total ?? -1) / 100).toFixed(2)}`}`;
+
+    // Date and Time of Purchase
+    const created = `<t:${session.created ?? 0}:f>`;
+
+    // Receipt URL
+    const receiptLink = `[View Receipt](${receiptUrl ?? "https://dashboard.stripe.com/"})`;
+
+    // Footer
+    const footer = `Discord ID: ${session.metadata.DiscordID}${session.livemode === false ? " | Test Mode: True" : ""}`;
 
     // Send the webhook
     fetch(process.env.WEBHOOK_URL, {
@@ -212,27 +190,27 @@ app.post("/webhook", bodyParser.raw({ type: "application/json" }), async (req, r
               },
               {
                 name: "License Tier:",
-                value: session.metadata.Tier,
+                value: tier,
                 inline: true,
               },
               {
                 name: "Amount Paid:",
-                value: `$${(session.amount_total / 100).toFixed(2)}`,
+                value: amountPaid,
                 inline: true,
               },
               {
                 name: "Date Purchased:",
-                value: `<t:${session.created}:f>`,
+                value: created,
                 inline: true,
               },
               {
                 name: "Receipt:",
-                value: `[View Receipt](${receiptUrl})`,
+                value: receiptLink,
                 inline: true,
               },
             ],
             footer: {
-              text: `Discord ID: ${session.metadata.DiscordID} ${session.livemode}`,
+              text: footer,
             },
             thumbnail: {
               url: "https://cdn.discordapp.com/icons/939553319750344744/230b38fa4b3fc660cf37837359cbb7fc.webp",
