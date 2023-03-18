@@ -151,8 +151,11 @@ app.post("/webhook", bodyParser.raw({ type: "application/json" }), async (req, r
     // Tier
     const tier = session.metadata.Tier || lineItems.data[0].description;
 
+    // Currency
+    const currency = session.currency.toUpperCase() === "EUR" ? "€" : session.currency.toUpperCase() === "USD" ? "$" : session.currency.toUpperCase() === "GBP" ? "£" : session.currency.toUpperCase();
+
     // Amount Paid
-    const amountPaid = `${session.amount_total == null ? "N/A" : (session.amount_total ?? -1) === -1 ? "Error: Invalid amount" : `$${((session.amount_total ?? -1) / 100).toFixed(2)}`}`;
+    const amountPaid = `${session.amount_total == null ? "N/A" : (session.amount_total ?? -1) === -1 ? "Error: Invalid amount" : `${currency}${((session.amount_total ?? -1) / 100).toFixed(2)}`}`;
 
     // Date and Time of Purchase
     const created = `<t:${session.created ?? 0}:f>`;
