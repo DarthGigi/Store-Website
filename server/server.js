@@ -38,6 +38,25 @@ app.use((req, res, next) => {
   }
 });
 
+// Get the price of the roblox pass from https://apis.roblox.com/game-passes/v1/game-passes/19208841/product-info
+/*
+Access to fetch at 'https://apis.roblox.com/game-passes/v1/game-passes/19208841/product-info' from origin 'http://localhost:3000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+*/
+app.get("/roblox-price", async (req, res) => {
+  let headers = new Headers();
+  headers.append("Access-Control-Allow-Origin", "*");
+  headers.append("Access-Control-Allow-Methods", "GET, POST");
+  headers.append("Access-Control-Allow-Headers", "Content-Type");
+  headers.append("Access-Control-Allow-Credentials", "true");
+  const response = await fetch("https://apis.roblox.com/game-passes/v1/game-passes/19208841/product-info", {
+    method: "GET",
+    headers: headers,
+  });
+  const data = await response.json();
+  console.log(data);
+  res.json(data);
+});
+
 // This code creates a checkout session and returns the URL
 app.post("/create-checkout-session", async (req, res) => {
   // Stripe checkout session

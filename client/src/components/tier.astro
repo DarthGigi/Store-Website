@@ -29,6 +29,9 @@ const { id, txt, price, x, y } = Astro.props;
 </div>
 
 <script>
+  // get the price from /roblox-price
+  const robloxAPIPrice = await fetch("/roblox-price").then((res) => res.json());
+
   function enableNextSection() {
     const nextSection = this.parentElement.parentElement.nextElementSibling;
     if (nextSection) {
@@ -62,7 +65,8 @@ const { id, txt, price, x, y } = Astro.props;
       if (tier === "Pro") {
         stripeprice = "$15.99";
         cryptoprice = "$13.99";
-        robuxprice = "2,899";
+        // put a comma in the price, slice the first digit, and add the comma then add the rest of the string
+        robuxprice = robloxAPIPrice.PriceInRobux.toLocaleString().slice(0, 1) + robloxAPIPrice.PriceInRobux.toLocaleString().slice(1);
       }
       // If the value is "Essential"
       if (tier === "Essential") {
