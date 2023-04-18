@@ -1,0 +1,15 @@
+<script lang="ts">
+  export let type: string;
+  export let id: string;
+  export let placeholder: string;
+</script>
+
+<div class="relative mt-3 flex text-left leading-6 tracking-tight">
+  <input disabled required {type} {id} name={id} {placeholder} class="peer col-span-2 flex w-full items-center justify-between overflow-hidden rounded-lg border border-neutral-700 bg-black p-4 text-white placeholder-neutral-500 placeholder-transparent shadow-sm backdrop-blur-md transition-all duration-500 focus:border-neutral-500 focus:outline-none focus:ring-neutral-500" />
+  <button tabindex="-1" id={id + 'Question'} type="button" class="absolute right-0 top-2 z-10 origin-[0] translate-x-3 -translate-y-4 transform text-neutral-700 duration-300 hover:translate-x-2 hover:scale-100 hover:text-white peer-focus:text-neutral-500 peer-focus:hover:text-white lg:scale-75">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none h-6 w-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+    </svg>
+  </button>
+  <label for={id} class="absolute left-1 top-2 z-10 origin-[0] translate-x-2 -translate-y-5 scale-75 transform bg-black px-2 text-neutral-400 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:translate-x-2 peer-focus:scale-75 peer-focus:bg-black peer-focus:px-2 peer-focus:text-white">{placeholder}</label>
+</div>
