@@ -10,7 +10,7 @@
 <header>
 	<div
 		id="infoMenu"
-		class="pointer-events-auto fixed left-0 top-0 z-50 w-full items-start px-4 md:flex md:backdrop-blur lg:z-0 lg:backdrop-blur-none"
+		class="pointer-events-auto hidden fixed left-0 top-0 z-50 w-full items-start px-4 md:visible md:flex md:backdrop-blur lg:z-0 lg:backdrop-blur-none"
 	>
 		<div class="items-left flex flex-col items-start pl-10 pb-4 pt-10">
 			<span id="infoMenuTier" class="text-4xl font-bold text-white transition-all"
@@ -19,10 +19,16 @@
 					: ''}</span
 			>
 			<div class="my-2 flex flex-row items-start text-white">
-				<svg class="mr-2 h-6" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+				<svg
+					class="mr-2 h-6"
+					role="img"
+					viewBox="0 0 640 640"
+					width={24}
+					height={24}
+					fill="#fff"
+					xmlns="http://www.w3.org/2000/svg"
 					><title>Windows</title><path
-						fill="currentColor"
-						d="M0,0H11.377V11.372H0ZM12.623,0H24V11.372H12.623ZM0,12.623H11.377V24H0Zm12.623,0H24V24H12.623"
+						d="M.2 298.669L0 90.615l256.007-34.76v242.814H.201zM298.658 49.654L639.905-.012v298.681H298.657V49.654zM640 341.331l-.071 298.681L298.669 592V341.332h341.33zM255.983 586.543L.189 551.463v-210.18h255.794v245.26z"
 					/></svg
 				>
 				<svg class="mr-2 h-6" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
