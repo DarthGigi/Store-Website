@@ -9,12 +9,12 @@
 
 	const dispatch = createEventDispatcher();
 
-	const select = (id: string, price: number) => {
-		choice = { id, price };
-		dispatch('choiceChanged');
+	const select = (id: string) => {
+		choice.PlanID = id;
+		dispatch('planChanged');
 	};
 	const handleClick = ({ detail }: { detail: IChoice }) => {
-		select(detail.id, detail.price);
+		select(detail.PlanID);
 	};
 </script>
 

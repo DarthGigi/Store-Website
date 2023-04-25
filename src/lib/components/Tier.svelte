@@ -39,16 +39,16 @@
 
 	const dispatch = createEventDispatcher();
 
-	const click = () => dispatch('click', { id, price });
+	const click = () => dispatch('click', { PlanID: id });
 </script>
 
 <!-- This needs to be made accessible (basically just look check if the event is triggered by like the tab or space key or smt)-->
 <div
 	class="relative mt-3 flex text-left leading-6 tracking-tight"
-	on:click|preventDefault={() => {
+	on:click={() => {
 		click();
 	}}
-	on:keypress|preventDefault={() => {}}
+	on:keypress={() => {}}
 >
 	<input
 		required

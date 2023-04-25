@@ -4,7 +4,8 @@
 
 	export let choice: IChoice;
 	export let showSub: boolean;
-	console.log(choice);
+	export let enabled: boolean;
+	export let price: number;
 </script>
 
 <header>
@@ -14,7 +15,9 @@
 	>
 		<div class="items-left flex flex-col items-start pl-10 pb-4 pt-10">
 			<span id="infoMenuTier" class="text-4xl font-bold text-white transition-all"
-				>Sirius {choice && choice.id != undefined ? choice.id : ''}</span
+				>Sirius {enabled && choice && choice.PlanID != undefined
+					? choice.PlanID[0].toUpperCase() + choice.PlanID.substring(1).toLowerCase()
+					: ''}</span
 			>
 			<div class="my-2 flex flex-row items-start text-white">
 				<svg class="mr-2 h-6" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
@@ -35,8 +38,8 @@
 					? ''
 					: 'hidden'}"
 			>
-				<span class="text-lg font-bold">{$page.data.title}</span>
-				<span class="text-base font-medium">{$page.data.tier}</span>
+				<span class="text-lg font-bold">{choice.PlanID}</span>
+				<span class="text-base font-medium">${price}</span>
 			</div>
 		</div>
 	</div>

@@ -20,6 +20,6 @@ export const load = (() => {
       };
 
     return {
-      plans
+      plans,
     }
 })

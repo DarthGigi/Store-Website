@@ -1,5 +1,8 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+	import { createEventDispatcher } from 'svelte';
 	export let id: string;
+	export let plan: string;
 	export let description: string = '';
 	export let x: string;
 	export let y: string;
@@ -25,9 +28,15 @@
 		default:
 			break;
 	}
+
+	const dispatch = createEventDispatcher();
+
+	const click = () => {
+		dispatch('click', { id, price: $page.data.plans[plan.toLowerCase()][id.toLowerCase()] });
+	};
 </script>
 
-<div>
+<div on:click={click} on:keypress={() => {}}>
 	<input
 		required
 		type="radio"
@@ -55,7 +64,7 @@
 					class="cursor-pointer text-left text-lg font-semibold leading-5 tracking-tight text-white"
 				>
 					{#if id !== 'Stripe'}
-						{id}Test1
+						{id}
 					{:else if id === 'Stripe'}
 						{id}
 						<span
@@ -72,7 +81,7 @@
 					id={id + 'Price'}
 					class="inline-block cursor-pointer whitespace-nowrap text-right text-xs leading-4 tracking-normal text-white"
 				>
-					$13.37
+					{id != 'Robux' ? '$' : ''}{$page.data.plans[plan.toLowerCase()][id.toLowerCase()]}
 				</span>
 			</span>
 		</span>

@@ -11,6 +11,6 @@ export interface IPlanPrices {
 }
 
 export interface IChoice {
-    id: string;
-    price: number;
+    PlanID: string;
+    PaymentID: string;
 };
