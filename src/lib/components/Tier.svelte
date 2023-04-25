@@ -95,7 +95,7 @@
 							From
 							<span
 								class="inline-block cursor-pointer whitespace-nowrap text-right text-xs leading-4 tracking-normal"
-								>${price}</span
+								>{price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span
 							>
 						</span>
 					</span>

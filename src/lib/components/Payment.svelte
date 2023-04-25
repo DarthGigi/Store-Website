@@ -81,7 +81,10 @@
 					id={id + 'Price'}
 					class="inline-block cursor-pointer whitespace-nowrap text-right text-xs leading-4 tracking-normal text-white"
 				>
-					{id != 'Robux' ? '$' : ''}{$page.data.plans[plan.toLowerCase()][id.toLowerCase()]}
+					{$page.data.plans[plan.toLowerCase()][id.toLowerCase()].toLocaleString('en-US', {
+						style: id != 'Robux' ? 'currency' : 'decimal',
+						currency: 'USD'
+					})}
 				</span>
 			</span>
 		</span>

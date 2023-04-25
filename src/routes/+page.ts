@@ -16,6 +16,11 @@ export const load = (() => {
           stripe: 3.99,
           crypto: 3.99,
           robux: 399
+        },
+        none: {
+          stripe: 0.0,
+          crypto: 0.0,
+          robux: 0
         }
       };
 

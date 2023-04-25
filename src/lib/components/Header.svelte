@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import type { IChoice } from '$lib/types';
 
 	export let choice: IChoice;
@@ -38,8 +37,13 @@
 					? ''
 					: 'hidden'}"
 			>
-				<span class="text-lg font-bold">{choice.PlanID}</span>
-				<span class="text-base font-medium">${price}</span>
+				<span class="text-lg font-bold">{choice.PaymentID}</span>
+				<span class="text-base font-medium"
+					>{price.toLocaleString('en-US', {
+						style: choice.PaymentID != 'Robux' ? 'currency' : 'decimal',
+						currency: 'USD'
+					})}</span
+				>
 			</div>
 		</div>
 	</div>

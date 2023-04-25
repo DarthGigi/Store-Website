@@ -6,12 +6,14 @@
 	import type { IChoice } from '$lib/types';
 
 	export let choice: IChoice;
+	export let enablePlan = false;
 
 	const dispatch = createEventDispatcher();
 
 	const select = (id: string) => {
 		choice.PlanID = id;
 		dispatch('planChanged');
+		enablePlan = true;
 	};
 	const handleClick = ({ detail }: { detail: IChoice }) => {
 		select(detail.PlanID);
