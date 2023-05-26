@@ -1,6 +1,5 @@
 interface ServicePrices {
   stripe: number | string;
-  crypto: number | string;
   robux: number | string;
 }
 export interface IPlanPrices {
