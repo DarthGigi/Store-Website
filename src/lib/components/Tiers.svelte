@@ -18,15 +18,10 @@
   const handleClick = ({ detail }: { detail: IChoice }) => {
     select(detail.PlanID);
   };
-
-  const pro = '939872682567151626';
-  const essential = '994723402214543452';
-  const hasPro: boolean = $page.data.user.roles.includes(pro);
-  const hasEssential: boolean = $page.data.user.roles.includes(essential);
 </script>
 
 <Section id="tiers" title="Tier." description="Which is best for you?">
-  {#if hasPro}
+  {#if $page.data.user.hasPro}
     <div class="relative mt-3 flex text-left leading-6 tracking-tight">
       <input disabled type="radio" id="highest" name="tier" class="hidden" />
       <label for="highest" class="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg bg-neutral-700 bg-opacity-[45%] p-[1px] shadow-sm backdrop-blur-md transition-all duration-500 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 peer-checked:!bg-opacity-[100%]">
@@ -45,7 +40,7 @@
         </div>
       </label>
     </div>
-  {:else if hasEssential}
+  {:else if $page.data.user.hasEssential}
     <Tier id="Upgrade" description="Upgrade to Pro." bind:price={$page.data.plans.upgrade.stripe} on:click={handleClick} />
   {:else}
     <Tier id="Pro" description="WatchTower, Themes & more!" bind:price={$page.data.plans.pro.stripe} on:click={handleClick} />

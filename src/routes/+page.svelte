@@ -12,10 +12,12 @@
   let showPlan = false;
   let price = 0.0;
 
+  // Set locale from the browser
   onMount(async () => {
     data.locale = navigator.language;
   });
 
+  // Scroll to the center of the element, smooth
   function enableAndScrollToElement(ele: HTMLElement) {
     ele.classList.forEach((cl) => {
       if (/opacity|hidden|scale/.test(cl)) {
@@ -27,25 +29,24 @@
     }, 250);
   }
 
+  // Scroll to the payment methods
   function ShowPaymentMethods() {
     enableAndScrollToElement(document.getElementById('payment') as HTMLElement);
   }
+
+  // Update the price
   function UpdatePrice({ detail }: { detail: number }) {
     price = detail;
     // enableAndScrollToElement(document.getElementById('details') as HTMLElement);
   }
-  // scroll to the center of #intro, not smooth
+
+  // Position the user at the center of the first section if they're logged in
   if (data.user) {
     onMount(() => {
       const intro = document.getElementById('intro') as HTMLDivElement;
       intro.scrollIntoView({ behavior: 'auto', block: 'center' });
     });
   }
-
-  const pro = '939872682567151626';
-  const essential = '994723402214543452';
-  const hasPro: boolean | undefined = data.user?.roles?.includes(pro);
-  const hasEssential: boolean | undefined = data.user?.roles?.includes(essential);
 </script>
 
 {#if data.user}
@@ -83,7 +84,7 @@
           bind:enablePlan={showPlan}
         />
       </div>
-      {#if !hasPro}
+      {#if !data.user.hasPro}
         <Payments bind:choice={selected} bind:enableSubText={showSubText} on:paymentChanged={UpdatePrice} />
       {/if}
     </div>

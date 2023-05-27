@@ -4,6 +4,7 @@ import { STRIPE_WEBHOOK_SECRET, WEBHOOK_URL, ROBLOX_WEBHOOK_SECRET } from '$env/
 import { stripe } from '$lib/server/stripe';
 
 export const POST: RequestHandler = async ({ request, fetch }) => {
+  // Check the user agent to see if the request is from Stripe or Roblox
   if (request.headers.get('user-agent')?.includes('Stripe')) {
     // Retrieve the event by verifying the signature
     const sig = request.headers.get('stripe-signature');
@@ -116,12 +117,12 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
       });
 
       if ((await webhook).status !== 200) {
-        return new Response('Error sending webhook', { status: 500 });
-      }
-      return new Response('OK', { status: 200 });
+        return new Response(`Error response from Discord after sending webhook: ${(await webhook).text()}`, { status: 502 });
+      } 
+      return new Response('Created. Purchase logged successfully to Discord.', { status: 201 });
     } else {
       // Return a 200 response to acknowledge receipt of the event
-      return new Response('OK', { status: 200 });
+      return new Response(`OK. Received event: ${webhookEvent.type}`, { status: 200 });
     }
   } else if (request.headers.get('user-agent')?.includes('Roblox')) {
     // Match the secret to verify the request
@@ -202,12 +203,14 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
       })
     });
 
+    // Return a 500 if the webhook failed to send
     if ((await webhook).status !== 200) {
-      return new Response('Error sending webhook', { status: 500 });
+      return new Response(`Error response from Discord after sending webhook: ${(await webhook).text()}`, { status: 502 });
     }
-    return new Response('OK', { status: 200 });
+    // Return a 201 if the webhook was sent successfully
+    return new Response('Created. Purchase logged successfully to Discord.', { status: 201 });
   } else {
-    // Return a 404 if the request is not from Stripe or Roblox
-    return new Response('Not Found', { status: 404 });
+    // Return a 400 if the request is not from Stripe or Roblox
+    return new Response('Bad Request', { status: 400 });
   }
 };
