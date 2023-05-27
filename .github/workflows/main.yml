@@ -1,0 +1,75 @@
+name: Build and deploy to VPS
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+
+      # Install Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # Install pnpm
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # Install dependencies
+      - name: Install dependencies
+        run: pnpm install
+
+      # Build the project in client folder
+      - name: Build
+        run: pnpm build
+
+      # Deploy the project to VPS
+      - name: Rsync Deployments Action
+        uses: Burnett01/rsync-deployments@master
+        with:
+          switches: -avzr --exclude=.env.production --exclude=restart.sh --delete
+          path: ./build
+          remote_path: ${{ secrets.REMOTE_PATH }}
+          remote_host: ${{ secrets.REMOTE_HOST }}
+          remote_user: ${{ secrets.REMOTE_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          remote_key_pass: ${{ secrets.SSH_PRIVATE_KEY_PASSPHRASE }}
+
+      # Restart the server
+      - name: Restart server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_PORT }}
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}
+            ./restart.sh
