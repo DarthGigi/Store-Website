@@ -208,7 +208,7 @@ export const actions: Actions = {
         })
       );
       // Open the Roblox game for the user
-      throw redirect(303, `roblox://placeId=13519364215&launchData=${launchData}`);
+      throw redirect(303, `roblox://placeId=13567101560&launchData=${launchData}`);
     }
   }
 };
