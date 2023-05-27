@@ -42,7 +42,7 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
       const customerEmail = session.customer_email || session.customer_details?.email || 'contact@gigi.asap';
 
       // Discord ID
-      const discordUser = `<@${session.metadata?.DiscordID ?? 'This purchase was probably not made via buy.sirius.menu.'}>`;
+      const discordUser = `<@${session.metadata?.DiscordID ?? 'This purchase was probably not made via store.sirius.menu.'}>`;
 
       // Tier
       const tier = session.metadata?.Tier || lineItems.data[0].description;
@@ -118,7 +118,7 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
 
       if ((await webhook).status !== 200) {
         return new Response(`Error response from Discord after sending webhook: ${(await webhook).text()}`, { status: 502 });
-      } 
+      }
       return new Response('Created. Purchase logged successfully to Discord.', { status: 201 });
     } else {
       // Return a 200 response to acknowledge receipt of the event

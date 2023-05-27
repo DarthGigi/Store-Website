@@ -14,7 +14,7 @@
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://buy.sirius.menu/" />
+  <meta property="og:url" content="https://store.sirius.menu/" />
   <meta property="og:site_name" content="Sirius" />
   <meta property="og:title" content="Sirius Store" />
   <meta property="og:description" content="Upgrade your experience by purchasing Sirius Pro or Essential at our Store." />
@@ -22,7 +22,7 @@
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://buy.sirius.menu/" />
+  <meta property="twitter:url" content="https://store.sirius.menu/" />
   <meta property="twitter:title" content="Sirius Store" />
   <meta property="twitter:description" content="Upgrade your experience by purchasing Sirius Pro or Essential at our Store." />
   <meta property="twitter:image" content="/assets/images/store.png" />
