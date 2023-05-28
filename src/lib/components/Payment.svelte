@@ -3,11 +3,11 @@
   import { createEventDispatcher } from 'svelte';
   export let id: string;
   export let plan: string;
-  export let description: string = '';
+  export let description = '';
   export let x: string;
   export let y: string;
-  let colors: string = '';
-  let stripeTextPositioning: string = '';
+  let colors = '';
+  let stripeTextPositioning = '';
 
   switch (id) {
     case 'Stripe':
@@ -30,10 +30,15 @@
   };
 </script>
 
-<div on:click={click} on:keypress={() => {}}>
+<div
+  on:click={click}
+  on:keypress={() => {
+    return;
+  }}
+>
   <input required type="radio" {id} value={id} name="payment" class="hidden" />
   <label for={id} class="group relative flex h-24 w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg bg-neutral-800 bg-opacity-70 p-4 shadow-sm backdrop-blur-md transition-all duration-500 hover:scale-105 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 active:scale-50 active:hover:scale-100 peer-checked:scale-95 peer-disabled:pointer-events-none peer-disabled:cursor-default peer-disabled:hover:scale-100">
-    <div class="{colors} will-change-transform absolute inset-0 max-h-[100px] max-w-[100px] transform rounded-full bg-gradient-to-r blur-lg transition-all duration-500 group-active:group-hover:duration-200 group-[:checked+&]:scale-[600%]" style:transform={`translate(${x}%, ${y}%) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`} />
+    <div class="{colors} absolute inset-0 max-h-[100px] max-w-[100px] transform rounded-full bg-gradient-to-r blur-lg transition-all duration-500 will-change-transform group-active:group-hover:duration-200 group-[:checked+&]:scale-[600%]" style:transform={`translate(${x}%, ${y}%) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`} />
 
     <span class="{stripeTextPositioning} z-20 flex w-full cursor-pointer flex-col items-center justify-center text-center leading-5 tracking-tight md:flex-row md:items-baseline md:justify-between">
       <span class="relative m-0 min-w-0 basis-1/2 cursor-pointer p-0 text-left leading-5 tracking-tight">

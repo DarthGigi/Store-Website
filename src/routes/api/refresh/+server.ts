@@ -4,7 +4,6 @@ import { DISCORD_OAUTH_SECRET } from '$env/static/private';
 
 export const POST = (async ({ request }) => {
   const refresh_token = (await request.json()).refresh_token;
-  console.log('refresh code => ', refresh_token);
 
   if (!refresh_token) {
     console.log('no refresh code found');
@@ -12,8 +11,6 @@ export const POST = (async ({ request }) => {
       status: 400
     });
   }
-
-  console.log(new URLSearchParams({ client_id: PUBLIC_DISCORD_OAUTH_ID, client_secret: DISCORD_OAUTH_SECRET, grant_type: 'refresh_token', refresh_token: refresh_token }));
 
   // performing a Fetch request to Discord's token endpoint
   const discord_response = await fetch('https://discord.com/api/oauth2/token', {
@@ -24,14 +21,13 @@ export const POST = (async ({ request }) => {
 
   // if there's an error, return it as json
   if (discord_response.error) {
-    console.log('error => ', discord_response.error);
+    console.error('error => ', discord_response.error);
     return new Response(JSON.stringify(discord_response), {
       status: 500
     });
   }
 
   // if there's an access token, return it as json
-  console.log('access token => ', discord_response.access_token);
   return new Response(JSON.stringify(discord_response), {
     status: 200
   });

@@ -20,17 +20,13 @@
   const handleClick = ({ detail }: { detail: { id: string; price: number } }) => {
     select(detail);
   };
-
-  const pro = '939872682567151626';
-  const essential = '994723402214543452';
-  const hasPro: boolean = $page.data.user.roles.includes(pro);
-  const hasEssential: boolean = $page.data.user.roles.includes(essential);
 </script>
 
-<Section id="payment" title="Payment." description="Which method suits you?" class="opacity-30">
+<!-- If a tier is not selected, don't show -->
+<Section id="payment" title="Payment." description="Which method suits you?" class="hidden opacity-30">
   <PaymentCard size="long">
     <Payment id="Stripe" plan={choice.PlanID} description="Apple Pay, Google Pay, Card, iDeal" x="100" y="200" on:click={handleClick} />
-    {#if !hasEssential}
+    {#if !$page.data.user.hasEssential}
       <Payment id="Robux" plan={choice.PlanID} on:click={handleClick} x="50" y="200" />
     {/if}
   </PaymentCard>

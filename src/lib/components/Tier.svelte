@@ -5,6 +5,7 @@
   export let id: string;
   export let description: string;
   export let price: number;
+  export let disabled = false;
   let blobColor: string;
   let x: string;
   let y: string;
@@ -49,9 +50,11 @@
   on:click={() => {
     click();
   }}
-  on:keypress={() => {}}
+  on:keypress={() => {
+    return;
+  }}
 >
-  <input required type="radio" {id} value={id} name="tier" class="hidden" />
+  <input {disabled} required type="radio" {id} value={id} name="tier" class="hidden" />
   <label for={id} class="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg bg-neutral-700 bg-opacity-[45%] p-[1px] shadow-sm backdrop-blur-md transition-all duration-500 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 peer-checked:!bg-opacity-[100%]">
     <div class="relative w-full rounded-[calc(0.5rem-1px)] bg-[#050505] bg-opacity-100 p-4">
       <!-- Blob div Start -->

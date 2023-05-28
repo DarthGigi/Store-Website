@@ -9,7 +9,7 @@
       The page you are looking for does not exist or something went wrong. <br /> Are you sure you are in the right place?
     </p>
     <div class="w-full text-center">
-      <a href="/" class=" text-[#979797] hover:text-[#ffffff] underline transition-colors duration-200 ease-in-out">Go back home →</a>
+      <a href="/" class="text-[#979797] underline transition-colors duration-200 ease-in-out hover:text-[#ffffff]">Go back home →</a>
     </div>
   </div>
 </div>
