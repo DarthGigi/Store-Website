@@ -101,7 +101,7 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
         return unitAmount;
       })(await stripe.prices.retrieve(PRICE_ID_PRO)),
       // Get the price data from Roblox
-      robux: (await fetch('https://apis.roblox.com/game-passes/v1/game-passes/19208841/product-info').then((res) => res.json())).PriceInRobux
+      robux: (await fetch('https://apis.roblox.com/game-passes/v1/game-passes/181940005/product-info').then((res) => res.json())).PriceInRobux
     },
     essential: {
       // Get the price data from Stripe
@@ -110,7 +110,7 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
         return unitAmount;
       })(await stripe.prices.retrieve(PRICE_ID_ESSENTIAL)),
       // Get the price data from Roblox
-      robux: (await fetch('https://apis.roblox.com/game-passes/v1/game-passes/166413635/product-info').then((res) => res.json())).PriceInRobux
+      robux: (await fetch('https://apis.roblox.com/game-passes/v1/game-passes/181940072/product-info').then((res) => res.json())).PriceInRobux
     },
     upgrade: {
       // Get the price data from Stripe
