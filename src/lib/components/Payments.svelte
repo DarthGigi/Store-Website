@@ -30,5 +30,5 @@
       <Payment id="Robux" plan={choice.PlanID} on:click={handleClick} x="50" y="200" />
     {/if}
   </PaymentCard>
-  <Button on_click={() => document.getElementsByTagName('form')[0].submit()} disabled={!choice.PaymentID} id="purchaseBtn">Purchase</Button>
+  <Button on_click={() => document.getElementsByTagName('form')[0].submit()} disabled={!choice.PaymentID} id="purchaseBtn">Buy</Button>
 </Section>
