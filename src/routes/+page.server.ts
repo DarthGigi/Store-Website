@@ -127,13 +127,22 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
   };
 
   // Get the user's location to determine their currency
-  const location = await fetch(`http://ip-api.com/json/${getClientAddress()}?fields=8445952`).then((res) => res.json());
+  let location;
+  try {
+    location = await fetch(`http://ip-api.com/json/${getClientAddress()}?fields=8445952`).then((res) => res.json());
+  } catch (e) {
+    console.log("Couldn't get user's location. => " + e);
+    location = {
+      currency: 'USD',
+      status: 'fail'
+    };
+  }
 
   // If the user's currency is not supported, set the currency to USD
-  if (!['EUR', 'GBP', 'USD'].includes(location.currency) || location.status === 'fail') {
+  if (!['EUR', 'GBP', 'USD'].includes(await location.currency) || (await location.status) === 'fail') {
     location.currency = 'USD';
   }
-  currency = location.currency;
+  currency = await location.currency;
 
   return {
     plans,
