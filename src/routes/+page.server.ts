@@ -162,6 +162,15 @@ export const actions: Actions = {
     if (formData.get('payment') == 'Stripe') {
       // Get the tier from the form data
       const tier: string = formData.get('tier') as string;
+
+      if (!tier) {
+        throw new Error('Tier not found');
+      }
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
       let priceId: string;
 
       // Get the price ID based on the tier
@@ -190,7 +199,7 @@ export const actions: Actions = {
         ],
         metadata: {
           // User's Discord ID to identify the user
-          DiscordID: user?.id as string,
+          DiscordID: user.id as string,
           Tier: tier
         },
         mode: 'payment',
