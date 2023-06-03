@@ -18,7 +18,7 @@ else
 fi
 
 # Install dependencies
-pnpm i || { echo "Failed to install dependencies. Exiting."; exit 1; }
+pnpm i --frozen-lockfile || { echo "Failed to install dependencies. Exiting."; exit 1; }
 
 # Build the project and capture the output in the log file
 pnpm build > "$log_file" 2>&1 || { echo "Build failed. Check the log file for details: $log_file"; exit 1; }
