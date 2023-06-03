@@ -26,7 +26,7 @@
 <Section id="payment" title="Payment." description="Which method suits you?" class="hidden opacity-30">
   <PaymentCard size="long">
     <Payment id="Stripe" plan={choice.PlanID} description="Apple Pay, Google Pay, Card, iDeal" x="100" y="200" on:click={handleClick} />
-    {#if !$page.data.user.hasEssential}
+    {#if !$page.data.streamed.user.hasEssential}
       <Payment id="Robux" plan={choice.PlanID} on:click={handleClick} x="50" y="200" />
     {/if}
   </PaymentCard>

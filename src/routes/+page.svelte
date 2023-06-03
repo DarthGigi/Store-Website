@@ -3,6 +3,7 @@
   import type { PageData } from './$types';
   import { onMount } from 'svelte';
   import Header from '$lib/components/Header.svelte';
+  import UserCard from '$lib/components/UserCard.svelte';
   import Payments from '$lib/components/Payments.svelte';
   import Tiers from '$lib/components/Tiers.svelte';
 
@@ -40,51 +41,43 @@
   }
 
   // Position the user at the center of the first section if they're logged in
-  if (data.user) {
-    onMount(() => {
-      const intro = document.getElementById('intro') as HTMLDivElement;
-      intro.scrollIntoView({ behavior: 'auto', block: 'center' });
-    });
-  }
+  (async () => {
+    const logged_in = await data.logged_in;
+    if (logged_in) {
+      onMount(() => {
+        const intro = document.getElementById('intro') as HTMLDivElement;
+        intro.scrollIntoView({ behavior: 'auto', block: 'center' });
+      });
+    }
+  })();
 </script>
 
-{#if data.user}
+{#if data.logged_in}
   <Header choice={selected} bind:price bind:showSub={showSubText} bind:enabled={showPlan} />
-
   <form class="mt-24 w-full px-4 py-8 lg:col-span-6 lg:mt-0" action="/" method="post">
     <div class="mx-auto my-48 max-w-xl space-y-48 md:my-72 md:space-y-96 lg:my-96 lg:max-w-md">
       <div id="intro" class="flex flex-col gap-10">
         <div>
           <h2 class="m-0 p-0 text-left text-2xl font-semibold tracking-wide">
-            <span class="!font-sfdisplay text-2xl font-semibold leading-7 text-white">
-              Purchasing as
-              <span class="text-neutral-400">
-                {data.user.username}
+            {#await data.streamed.user}
+              <span class="flex flex-row items-center !font-sfdisplay text-2xl font-semibold leading-7 text-white">
+                Purchasing as
+                <span class="ml-2 inline-flex h-6 w-20 animate-pulse rounded bg-neutral-700/40" />
               </span>
-            </span>
+            {:then user}
+              <span class="!font-sfdisplay text-2xl font-semibold leading-7 text-white">
+                Purchasing as
+                <span class="text-neutral-400">
+                  {user.username}
+                </span>
+              </span>
+            {/await}
           </h2>
-          <dl class="mt-5 gap-5">
-            <div class="group relative w-full overflow-hidden rounded-lg border border-neutral-700 border-opacity-40 bg-[#050505] bg-cover bg-center bg-no-repeat px-4 py-5 shadow sm:p-6">
-              <img src="https://cdn.discordapp.com/avatars/{data.user.id}/{data.user.avatar}?size=16" alt="User Avatar Blurred" class="absolute inset-0 h-[75px] max-h-[100px] w-[100px] max-w-[100px] scale-[5] rounded-full bg-gradient-to-r blur-lg transition-all duration-500 will-change-transform group-hover:scale-150 group-active:group-hover:scale-125 group-active:group-hover:duration-200 group-[:checked+&]:scale-150" style="transform:translate(325%, 50%) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))" />
-              <div class="relative z-20">
-                <dd class="mt-1 flex flex-row justify-between text-3xl font-semibold tracking-tight text-white">
-                  <p class="flex flex-col">
-                    <span>
-                      {data.user.username + '#' + data.user.discriminator}
-                      <br />
-                      <span class="text-sm font-normal text-neutral-200">
-                        {data.user.id}
-                      </span>
-                    </span>
-                    <a href="/api/logout" class="m-0 p-0 text-sm font-normal text-neutral-400 underline opacity-0 transition-opacity duration-300 group-hover:opacity-100">Not you?</a>
-                  </p>
-                  <div class="flex items-center justify-center">
-                    <img src="https://cdn.discordapp.com/avatars/{data.user.id}/{data.user.avatar}?size=256" class="inline-block h-24 w-24 rounded-full drop-shadow-[0_0_10px_rgb(0_0_0_/_0.25)]" alt="User Avatar" />
-                  </div>
-                </dd>
-              </div>
-            </div>
-          </dl>
+          {#await data.streamed.user}
+            <UserCard loading={true} class="animate-pulse" />
+          {:then user}
+            <UserCard loading={false} {user} />
+          {/await}
         </div>
         <Tiers
           bind:choice={selected}
@@ -92,11 +85,16 @@
             ShowPaymentMethods();
           }}
           bind:enablePlan={showPlan}
+          de
         />
       </div>
-      {#if !data.user.hasPro}
-        <Payments bind:choice={selected} bind:enableSubText={showSubText} on:paymentChanged={UpdatePrice} />
-      {/if}
+      {#await data.streamed.user}
+        <h3 class="text-9xl text-white">Loading...</h3>
+      {:then user}
+        {#if !user.hasPro}
+          <Payments bind:choice={selected} bind:enableSubText={showSubText} on:paymentChanged={UpdatePrice} />
+        {/if}
+      {/await}
     </div>
   </form>
 {:else}
@@ -105,18 +103,16 @@
     <div class="relative z-10 flex max-w-lg flex-col">
       <div class="text-left">
         <h1 class="mt-4 text-3xl font-bold tracking-tight text-neutral-200 sm:text-5xl">Welcome</h1>
-        <p id="desc" class="mt-2 text-base leading-7 text-neutral-400">Before continuing to the Sirius Store, you'll need to connect Sirius to your Discord account using the login button below.</p>
+        <p id="desc" class="mt-2 text-base leading-7 text-white opacity-40">Before continuing to the Sirius Store, you'll need to connect Sirius to your Discord account using the login button below.</p>
       </div>
       <div class="mt-11 flex items-center justify-end">
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
         <a
           on:mouseover={() => {
             document.getElementById('blob')?.classList.add('!scale-[20]');
-            document.getElementById('desc')?.classList.add('!opacity-40', '!text-white');
           }}
           on:mouseout={() => {
             document.getElementById('blob')?.classList.remove('!scale-[20]');
-            document.getElementById('desc')?.classList.remove('!opacity-40', '!text-white');
           }}
           href="/api/auth"
           class="flex flex-row items-center justify-center rounded-md bg-[#5865F2] px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-[rgb(20_20_20)] hover:bg-opacity-30 hover:text-opacity-70"

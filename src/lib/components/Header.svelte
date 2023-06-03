@@ -18,12 +18,14 @@
       </div>
       <div class="mt-4 scale-100 transform flex-col items-start text-neutral-300 opacity-100 duration-500 {showSub ? '' : 'hidden'}">
         <span class="text-lg font-bold">{enabled && showSub && choice.PaymentID != undefined ? choice.PaymentID : ''}</span>
-        <span class="text-base font-medium">
-          {new Intl.NumberFormat($page.data.locale, {
-            style: choice.PaymentID != 'Robux' ? 'currency' : 'decimal',
-            currency: $page.data.currency
-          }).format(price)}
-        </span>
+        {#await $page.data.streamed.currency then currency}
+          <span class="text-base font-medium">
+            {new Intl.NumberFormat($page.data.locale, {
+              style: choice.PaymentID != 'Robux' ? 'currency' : 'decimal',
+              currency: currency
+            }).format(price)}
+          </span>
+        {/await}
       </div>
     </div>
   </div>

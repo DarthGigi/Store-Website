@@ -32,7 +32,12 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then((res) => res.json());
+    }).then((res) => {
+      if (res.status === 511) {
+        throw redirect(307, '/api/auth');
+      }
+      return res.json();
+    });
 
     // Set the new access token and refresh token expiry dates
     const access_token_expires_in = new Date(Date.now() + discord_response.expires_in); // 10 minutes
@@ -145,11 +150,14 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
   currency = await location.currency;
 
   return {
-    plans,
-    currency,
     // Set default locale to en-US, can be overridden by the user's browser
     locale: 'en-US',
-    user
+    logged_in: user != null,
+    streamed: {
+      currency,
+      plans,
+      user
+    }
   };
 }) satisfies PageServerLoad;
 

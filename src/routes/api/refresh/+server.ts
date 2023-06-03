@@ -7,9 +7,7 @@ export const POST = (async ({ request }) => {
 
   if (!refresh_token) {
     console.log('no refresh code found');
-    return new Response(JSON.stringify({ error: 'no refresh code found' }), {
-      status: 400
-    });
+    return new Response(JSON.stringify('/api/login'), { status: 511 });
   }
 
   // performing a Fetch request to Discord's token endpoint
@@ -22,8 +20,8 @@ export const POST = (async ({ request }) => {
   // if there's an error, return it as json
   if (discord_response.error) {
     console.error('error => ', discord_response.error);
-    return new Response(JSON.stringify(discord_response), {
-      status: 500
+    return new Response(JSON.stringify('/api/login'), {
+      status: 511
     });
   }
 

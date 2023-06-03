@@ -26,7 +26,7 @@
   const dispatch = createEventDispatcher();
 
   const click = () => {
-    dispatch('click', { id, price: $page.data.plans[plan.toLowerCase()][id.toLowerCase()] });
+    dispatch('click', { id, price: $page.data.streamed.plans[plan.toLowerCase()][id.toLowerCase()] });
   };
 </script>
 
@@ -53,11 +53,11 @@
       </span>
       <span class="relative m-0 min-w-0 basis-1/2 cursor-pointer p-0 text-right leading-5 tracking-tight">
         <span id={id + 'Price'} class="inline-block cursor-pointer whitespace-nowrap text-right text-xs leading-4 tracking-normal text-white">
-          {#if $page.data.plans[plan.toLowerCase()][id.toLowerCase()] != ''}
+          {#if $page.data.streamed.plans[plan.toLowerCase()][id.toLowerCase()] != ''}
             {new Intl.NumberFormat($page.data.locale, {
               style: id !== 'Robux' ? 'currency' : 'decimal',
               currency: $page.data.currency
-            }).format($page.data.plans[plan.toLowerCase()][id.toLowerCase()])}
+            }).format($page.data.streamed.plans[plan.toLowerCase()][id.toLowerCase()])}
           {/if}
         </span>
       </span>
