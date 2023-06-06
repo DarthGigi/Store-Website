@@ -56,7 +56,7 @@
           {#if $page.data.streamed.plans[plan.toLowerCase()][id.toLowerCase()] != ''}
             {new Intl.NumberFormat($page.data.locale, {
               style: id !== 'Robux' ? 'currency' : 'decimal',
-              currency: $page.data.currency
+              currency: $page.data.streamed.currency
             }).format($page.data.streamed.plans[plan.toLowerCase()][id.toLowerCase()])}
           {/if}
         </span>
