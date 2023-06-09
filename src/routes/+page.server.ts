@@ -216,7 +216,11 @@ export const actions: Actions = {
         cancel_url: `${DOMAIN}status/{CHECKOUT_SESSION_ID}`,
         submit_type: 'pay',
         currency: currency,
-        allow_promotion_codes: false
+        allow_promotion_codes: false,
+        automatic_tax: {
+          enabled: true
+        },
+        billing_address_collection: 'required'
       });
 
       // Redirect the user to the Stripe checkout session
