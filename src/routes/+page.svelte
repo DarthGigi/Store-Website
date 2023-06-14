@@ -27,7 +27,7 @@
     });
     setTimeout(() => {
       ele.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 250);
+    }, 200);
   }
 
   // Scroll to the payment methods
@@ -39,17 +39,6 @@
   function UpdatePrice({ detail }: { detail: number }) {
     price = detail;
   }
-
-  // Position the user at the center of the first section if they're logged in
-  (async () => {
-    const logged_in = await data.logged_in;
-    if (logged_in) {
-      onMount(() => {
-        const intro = document.getElementById('intro') as HTMLDivElement;
-        intro.scrollIntoView({ behavior: 'auto', block: 'center' });
-      });
-    }
-  })();
 </script>
 
 {#if data.logged_in}
@@ -90,7 +79,7 @@
       {#await data.streamed.user}
         <h3 class="text-9xl text-white">Loading...</h3>
       {:then user}
-        {#if user?.hasPro}
+        {#if !user.hasPro}
           <Payments bind:choice={selected} bind:enableSubText={showSubText} on:paymentChanged={UpdatePrice} />
         {/if}
       {/await}
