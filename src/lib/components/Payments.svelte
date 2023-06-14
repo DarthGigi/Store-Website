@@ -23,7 +23,7 @@
 </script>
 
 <!-- If a tier is not selected, don't show -->
-<Section id="payment" title="Payment." description="Which method suits you?" class="hidden opacity-30">
+<Section id="payment" title="Payment." description="Which method suits you?" class="flex !hidden h-screen flex-col justify-center opacity-30">
   <PaymentCard size="long">
     <Payment id="Stripe" plan={choice.PlanID} description="Apple Pay, Google Pay, Card, iDeal" x="100" y="200" on:click={handleClick} />
     {#if !$page.data.streamed.user.hasEssential}

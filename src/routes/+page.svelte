@@ -21,7 +21,7 @@
   // Scroll to the center of the element, smooth
   function enableAndScrollToElement(ele: HTMLElement) {
     ele.classList.forEach((cl) => {
-      if (/opacity|hidden|scale/.test(cl)) {
+      if (/opacity|hidden|scale|!hidden/.test(cl)) {
         ele.classList.remove(cl);
       }
     });
@@ -54,9 +54,9 @@
 
 {#if data.logged_in}
   <Header choice={selected} bind:price bind:showSub={showSubText} bind:enabled={showPlan} />
-  <form class="mt-24 w-full px-4 py-8 lg:col-span-6 lg:mt-0" action="/" method="post">
-    <div class="mx-auto my-48 max-w-xl space-y-48 md:my-72 md:space-y-96 lg:my-96 lg:max-w-md">
-      <div id="intro" class="flex flex-col gap-10">
+  <form class="mt-24 w-full px-4 lg:col-span-6 lg:mt-0" action="/" method="post">
+    <div class="mx-auto max-w-xl lg:max-w-md">
+      <div id="intro" class="flex h-screen flex-col justify-center gap-10">
         <div>
           <h2 class="m-0 p-0 text-left text-2xl font-semibold tracking-wide">
             {#await data.streamed.user}
@@ -68,7 +68,7 @@
               <span class="!font-sfdisplay text-2xl font-semibold leading-7 text-white">
                 Purchasing as
                 <span class="text-neutral-400">
-                  {user.username}
+                  {user?.username}
                 </span>
               </span>
             {/await}
@@ -85,13 +85,12 @@
             ShowPaymentMethods();
           }}
           bind:enablePlan={showPlan}
-          de
         />
       </div>
       {#await data.streamed.user}
         <h3 class="text-9xl text-white">Loading...</h3>
       {:then user}
-        {#if !user.hasPro}
+        {#if user?.hasPro}
           <Payments bind:choice={selected} bind:enableSubText={showSubText} on:paymentChanged={UpdatePrice} />
         {/if}
       {/await}
