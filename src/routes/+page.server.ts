@@ -19,7 +19,8 @@ interface User {
 }
 
 // Global variables to store the user data and the currency so it can be used in the actions when user submits the form
-let user: User | null | undefined;
+let logged_in: boolean;
+let user: User;
 let currency: string;
 
 export const load = (async ({ getClientAddress, cookies, request }) => {
@@ -86,15 +87,16 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
         user.hasPro = user.roles?.includes('939872682567151626');
         user.hasEssential = user.roles?.includes('994723402214543452');
       }
+      logged_in = true;
     }
-    // If the user doesn't exist, set the user to null
+    // If the user doesn't exist, set logged_in to false
     else {
-      user = null;
+      logged_in = false;
     }
   }
-  // If the user doesn't have an access token, that means they're not logged in, set the user to null
+  // If the user doesn't have an access token, that means they're not logged in, set logged_in to false
   else {
-    user = null;
+    logged_in = false;
   }
 
   // Get the prices of the plans
@@ -152,7 +154,7 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
   return {
     // Set default locale to en-US, can be overridden by the user's browser
     locale: 'en-US',
-    logged_in: user != null,
+    logged_in,
     streamed: {
       currency,
       plans,

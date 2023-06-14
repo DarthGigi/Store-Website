@@ -41,7 +41,7 @@
   {:then user}
     {#await $page.data.streamed.plans then}
       {#if user.hasPro}
-        <Tier id="Pro" disabled description="WatchTower, Themes & more!" bind:price={$page.data.streamed.plans.pro.stripe} on:click={handleClick} />
+        <Tier id="Pro" disabled description="WatchTower, Themes & more!" bind:price={$page.data.streamed.plans.pro.stripe} />
       {:else if user.hasEssential}
         <Tier id="Upgrade" description="Upgrade to Pro." bind:price={$page.data.streamed.plans.upgrade.stripe} on:click={handleClick} />
       {:else}
