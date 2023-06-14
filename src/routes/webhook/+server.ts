@@ -1,7 +1,7 @@
-import type { RequestHandler } from './$types';
-import type Stripe from 'stripe';
-import { STRIPE_WEBHOOK_SECRET, WEBHOOK_URL, ROBLOX_WEBHOOK_SECRET } from '$env/static/private';
+import { ROBLOX_WEBHOOK_SECRET, STRIPE_WEBHOOK_SECRET, WEBHOOK_URL } from '$env/static/private';
 import { stripe } from '$lib/server/stripe';
+import type Stripe from 'stripe';
+import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request, fetch }) => {
   // Check the user agent to see if the request is from Stripe or Roblox

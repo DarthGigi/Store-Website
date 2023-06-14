@@ -1,6 +1,6 @@
-import type { RequestHandler } from './$types';
-import { PUBLIC_DISCORD_OAUTH_ID } from '$env/static/public';
 import { DISCORD_OAUTH_SECRET } from '$env/static/private';
+import { PUBLIC_DISCORD_OAUTH_ID } from '$env/static/public';
+import type { RequestHandler } from './$types';
 
 export const POST = (async ({ request }) => {
   const refresh_token = (await request.json()).refresh_token;

@@ -1,9 +1,9 @@
-import type { PageServerLoad, Actions } from './$types';
-import type { IPlanPrices } from '$lib/types';
-import { PRICE_ID_PRO, PRICE_ID_ESSENTIAL, PRICE_ID_UPGRADE, DOMAIN, DISCORD_BOT_TOKEN } from '$env/static/private';
+import { DISCORD_BOT_TOKEN, DOMAIN, PRICE_ID_ESSENTIAL, PRICE_ID_PRO, PRICE_ID_UPGRADE } from '$env/static/private';
 import { PUBLIC_SIRIUS_GUILD_ID } from '$env/static/public';
 import { stripe } from '$lib/server/stripe';
+import type { IPlanPrices } from '$lib/types';
 import { redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
 const DISCORD_API_URL = 'https://discord.com/api/v10';
 
 // User interface
@@ -19,7 +19,7 @@ interface User {
 }
 
 // Global variables to store the user data and the currency so it can be used in the actions when user submits the form
-let user: User | null;
+let user: User | null | undefined;
 let currency: string;
 
 export const load = (async ({ getClientAddress, cookies, request }) => {

@@ -1,5 +1,5 @@
-import type { RequestHandler } from './$types';
 import { stripe } from '$lib/server/stripe';
+import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
   try {

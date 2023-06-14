@@ -1,6 +1,6 @@
-import type { RequestHandler } from './$types';
+import { DISCORD_BOT_TOKEN, DISCORD_OAUTH_SECRET } from '$env/static/private';
 import { PUBLIC_DISCORD_OAUTH_ID, PUBLIC_REDIRECT_URI, PUBLIC_SIRIUS_GUILD_ID } from '$env/static/public';
-import { DISCORD_OAUTH_SECRET, DISCORD_BOT_TOKEN } from '$env/static/private';
+import type { RequestHandler } from './$types';
 const DISCORD_API_URL = 'https://discord.com/api/v10';
 
 export const GET = (async ({ url, cookies }) => {
