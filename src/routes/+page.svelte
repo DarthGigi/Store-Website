@@ -92,15 +92,37 @@
             const giftBtn = document.getElementById('giftBtn');
             const giftAlert = document.getElementById('giftAlert');
             if (!giftInput || !giftBtn || !giftAlert) return;
-            // @ts-expect-error - innerHTML is a valid property
+            // @ts-expect-error - value is a valid property
             if (giftInput.value) {
-              giftBtn.innerHTML = 'Continue';
-              giftAlert.classList.remove('!opacity-0');
-              gift = true;
+              // must be at least 17 characters long
+              // @ts-expect-error - value is a valid property
+              if (giftInput.value.length < 17) {
+                giftBtn.innerHTML = 'Invalid ID';
+                // @ts-expect-error - disabled is a valid property
+                giftBtn.disabled = true;
+                giftAlert.classList.add('!opacity-0');
+                gift = false;
+                return;
+              } else {
+                giftBtn.innerHTML = 'Continue';
+                // @ts-expect-error - disabled is a valid property
+                giftBtn.disabled = false;
+                giftAlert.classList.remove('!opacity-0');
+                gift = true;
+              }
             } else {
-              giftBtn.innerHTML = 'Skip';
+              giftBtn.innerHTML = data.streamed.user.hasPro ? 'Continue' : 'Skip';
+              // disable the button if the user has pro
+              // @ts-expect-error - disabled is a valid property
+              giftBtn.disabled = data.streamed.user.hasPro ? true : false;
               giftAlert.classList.add('!opacity-0');
               gift = false;
+            }
+          }}
+          on:keypress={(e) => {
+            const validCharacters = /[0-9]/;
+            if (!validCharacters.test(e.key)) {
+              e.preventDefault();
             }
           }}
         >
@@ -109,20 +131,17 @@
         <div class="flex flex-row-reverse justify-between">
           <Button
             id="giftBtn"
+            disabled={data.streamed.user.hasPro ? true : false}
             on_click={() => {
               ShowPaymentMethods();
-            }}>Skip</Button
+            }}
           >
+            {data.streamed.user.hasPro ? 'Continue' : 'Skip'}
+          </Button>
           <p id="giftAlert" class="mt-3 text-base text-white !opacity-0 opacity-20 transition-opacity duration-300">Gifting is enabled</p>
         </div>
       </Section>
-      {#await data.streamed.user}
-        <h3 class="text-9xl text-white">Loading...</h3>
-      {:then user}
-        {#if !user.hasPro}
-          <Payments bind:choice={selected} bind:gift bind:enableSubText={showSubText} on:paymentChanged={UpdatePrice} />
-        {/if}
-      {/await}
+      <Payments bind:choice={selected} bind:gift bind:enableSubText={showSubText} on:paymentChanged={UpdatePrice} />
     </div>
     <!-- discord ID -->
     {#await data.streamed.user then user}
