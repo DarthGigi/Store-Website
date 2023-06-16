@@ -18,7 +18,7 @@
         <dd class="mt-1 flex flex-row justify-between text-3xl font-semibold tracking-tight text-white">
           <p class="flex flex-col">
             <span>
-              {user.username + '#' + user.discriminator}
+              {user.discriminator === '0' ? user.username : `${user.username}#${user.discriminator}`}
               <br />
               <span class="text-sm font-normal text-neutral-200">
                 {user.id}
