@@ -240,7 +240,7 @@ export const actions: Actions = {
               {
                 key: 'Gift',
                 label: {
-                  custom: 'Email of the person you are gifting to',
+                  custom: "Gift Recipient's email",
                   type: 'custom'
                 },
                 type: 'text'
