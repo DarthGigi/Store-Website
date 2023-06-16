@@ -9,6 +9,7 @@
 
   export let choice: IChoice;
   export let enableSubText = false;
+  export let gift: boolean;
 
   const dispatch = createEventDispatcher();
 
@@ -27,7 +28,7 @@
   <PaymentCard size="long">
     <Payment id="Stripe" plan={choice.PlanID} description="Apple Pay, Google Pay, Card, iDeal" x="100" y="200" on:click={handleClick} />
     {#if !$page.data.streamed.user.hasEssential}
-      <Payment id="Robux" plan={choice.PlanID} on:click={handleClick} x="50" y="200" />
+      <Payment id="Robux" plan={choice.PlanID} on:click={handleClick} x="50" y="200" class={gift ? 'hidden' : ''} />
     {/if}
   </PaymentCard>
   <Button on_click={() => document.getElementsByTagName('form')[0].submit()} disabled={!choice.PaymentID} id="purchaseBtn">Buy</Button>

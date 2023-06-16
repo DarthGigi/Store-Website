@@ -35,6 +35,7 @@
   on:keypress={() => {
     return;
   }}
+  class={$$props.class}
 >
   <input required type="radio" {id} value={id} name="payment" class="hidden" />
   <label for={id} class="group relative flex h-24 w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg bg-neutral-800 bg-opacity-70 p-4 shadow-sm backdrop-blur-md transition-all duration-500 hover:scale-105 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 active:scale-50 active:hover:scale-100 peer-checked:scale-95 peer-disabled:pointer-events-none peer-disabled:cursor-default peer-disabled:hover:scale-100">
