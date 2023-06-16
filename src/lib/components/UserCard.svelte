@@ -24,10 +24,12 @@
                 {user.id}
               </span>
             </span>
-            <a href="/api/logout" class="m-0 p-0 text-sm font-normal text-neutral-400 underline opacity-0 transition-opacity duration-300 group-hover:opacity-100">Not you?</a>
+            <span class="flex">
+              <a href="/api/logout" class="m-0 p-0 text-sm font-normal text-neutral-400 underline opacity-0 transition-opacity duration-300 group-hover:opacity-100">Not you?</a>
+            </span>
           </p>
-          <div class="flex items-center justify-center">
-            <img src="https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}?size=256" class="inline-block h-24 w-24 rounded-full drop-shadow-[0_0_10px_rgb(0_0_0_/_0.25)]" alt="User Avatar" />
+          <div class="pointer-events-none flex items-center justify-center">
+            <img src="https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}?size=256" class="pointer-events-none inline-block h-24 w-24 rounded-full drop-shadow-[0_0_10px_rgb(0_0_0_/_0.25)]" alt="User Avatar" />
           </div>
         </dd>
       </div>
