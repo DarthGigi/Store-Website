@@ -2,7 +2,7 @@ import { DISCORD_BOT_TOKEN, DOMAIN, PRICE_ID_ESSENTIAL, PRICE_ID_PRO, PRICE_ID_U
 import { PUBLIC_SIRIUS_GUILD_ID } from '$env/static/public';
 import { stripe } from '$lib/server/stripe';
 import type { IPlanPrices } from '$lib/types';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 const DISCORD_API_URL = 'https://discord.com/api/v10';
 
@@ -166,21 +166,32 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
 export const actions: Actions = {
   default: async ({ request }) => {
     // Get the form data
-    const formData = await request.formData();
+    const data = await request.formData();
+    console.log(data);
+    // Get the user's data
+    const mainUser = data.get('mainUser') as string;
+
+    const giftUser = data.get('giftUser') === '' ? null : (data.get('giftUser') as string | null);
+
+    if (logged_in == false) {
+      throw error(400, {
+        message: 'User not logged in'
+      });
+    } else if (!mainUser) {
+      throw error(400, {
+        message: 'Main user not found'
+      });
+    }
 
     // If the payment method is Stripe, create a Stripe checkout session
-    if (formData.get('payment') == 'Stripe') {
+    if (data.get('payment') == 'Stripe') {
       // Get the tier from the form data
-      const tier: string = formData.get('tier') as string;
-
-      if (!tier) {
-        throw new Error('Tier not found');
+      const tier: string = data.get('tier') as string;
+      if (!tier || tier == '') {
+        throw error(400, {
+          message: 'Tier not found'
+        });
       }
-
-      if (!user) {
-        throw new Error('User not found');
-      }
-
       let priceId: string;
 
       // Get the price ID based on the tier
@@ -209,8 +220,9 @@ export const actions: Actions = {
         ],
         metadata: {
           // User's Discord ID to identify the user
-          DiscordID: user.id as string,
-          Tier: tier
+          DiscordID: mainUser,
+          Tier: tier,
+          Gift: giftUser
         },
         mode: 'payment',
         customer_creation: 'always',
@@ -219,23 +231,35 @@ export const actions: Actions = {
         submit_type: 'pay',
         currency: currency,
         allow_promotion_codes: false,
-        automatic_tax: {
-          enabled: true
-        },
-        billing_address_collection: 'required'
+        // automatic_tax: {
+        //   enabled: true
+        // },
+        // billing_address_collection: 'required',
+        custom_fields: giftUser
+          ? [
+              {
+                key: 'Gift',
+                label: {
+                  custom: 'Email of the person you are gifting to',
+                  type: 'custom'
+                },
+                type: 'text'
+              }
+            ]
+          : []
       });
 
       // Redirect the user to the Stripe checkout session
       throw redirect(303, session.url as string);
     }
     // If the payment method is Robux, redirect the user to the Roblox game
-    else if (formData.get('payment') == 'Robux') {
+    else if (data.get('payment') == 'Robux') {
       // Set the launch data for the Roblox game
       const launchData = encodeURIComponent(
         JSON.stringify({
-          dID: user?.id,
-          dN: user?.username,
-          dD: user?.discriminator
+          dID: user.id,
+          dN: user.username,
+          dD: user.discriminator
         })
       );
       // Open the Roblox game for the user

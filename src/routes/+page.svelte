@@ -6,27 +6,30 @@
   import UserCard from '$lib/components/UserCard.svelte';
   import Payments from '$lib/components/Payments.svelte';
   import Tiers from '$lib/components/Tiers.svelte';
+  import Section from '$lib/components/Section.svelte';
+  import Input from '$lib/components/Input.svelte';
+  import Button from '$lib/components/Button.svelte';
 
   export let data: PageData;
   let selected: IChoice = { PlanID: 'none', PaymentID: '' };
   let showSubText = false;
   let showPlan = false;
   let price = 0.0;
-
+  let gift = false;
   // Set locale from the browser
   onMount(async () => {
     data.locale = navigator.language;
   });
 
   // Scroll to the center of the element, smooth
-  function enableAndScrollToElement(ele: HTMLElement) {
-    ele.classList.forEach((cl) => {
+  function enableAndScrollToElement(ele: HTMLElement | null) {
+    ele?.classList.forEach((cl) => {
       if (/opacity|hidden|scale|!hidden/.test(cl)) {
-        ele.classList.remove(cl);
+        ele?.classList.remove(cl);
       }
     });
     setTimeout(() => {
-      ele.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      ele?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 200);
   }
 
@@ -45,7 +48,7 @@
   <Header choice={selected} bind:price bind:showSub={showSubText} bind:enabled={showPlan} />
   <form class="mt-24 w-full px-4 lg:col-span-6 lg:mt-0" action="/" method="post">
     <div class="mx-auto max-w-xl lg:max-w-md">
-      <div id="intro" class="flex h-screen flex-col justify-center gap-10">
+      <section id="tiers" class="flex h-screen flex-col justify-center gap-10">
         <div>
           <h2 class="m-0 p-0 text-left text-2xl font-semibold tracking-wide">
             {#await data.streamed.user}
@@ -57,7 +60,7 @@
               <span class="!font-sfdisplay text-2xl font-semibold leading-7 text-white">
                 Purchasing as
                 <span class="text-neutral-400">
-                  {user?.username}
+                  {user.global_name || user.username}
                 </span>
               </span>
             {/await}
@@ -71,19 +74,60 @@
         <Tiers
           bind:choice={selected}
           on:planChanged={() => {
-            ShowPaymentMethods();
+            enableAndScrollToElement(document.getElementById('gifting'));
           }}
           bind:enablePlan={showPlan}
         />
-      </div>
+      </section>
+      <Section id="gifting" title="Feeling Generous?" class="flex !hidden h-screen flex-col justify-center">
+        <p class="-mt-[1px] mb-2 text-base text-white/40">Buying Sirius for a friend? Enter your friend's Discord ID below to gift a license to them</p>
+        <Input
+          id="gift"
+          type="number"
+          name="giftUser"
+          placeholder="Discord ID"
+          required={data.streamed.user.hasPro ? true : false}
+          on:input={() => {
+            const giftInput = document.getElementById('gift');
+            const giftBtn = document.getElementById('giftBtn');
+            const giftAlert = document.getElementById('giftAlert');
+            if (!giftInput || !giftBtn || !giftAlert) return;
+            // @ts-expect-error - innerHTML is a valid property
+            if (giftInput.value) {
+              giftBtn.innerHTML = 'Continue';
+              giftAlert.classList.remove('!opacity-0');
+              gift = true;
+            } else {
+              giftBtn.innerHTML = 'Skip';
+              giftAlert.classList.add('!opacity-0');
+              gift = false;
+            }
+          }}
+        >
+          ID
+        </Input>
+        <div class="flex flex-row-reverse justify-between">
+          <Button
+            id="giftBtn"
+            on_click={() => {
+              ShowPaymentMethods();
+            }}>Skip</Button
+          >
+          <p id="giftAlert" class="mt-3 text-base text-white !opacity-0 opacity-20 transition-opacity duration-300">Gifting is enabled</p>
+        </div>
+      </Section>
       {#await data.streamed.user}
         <h3 class="text-9xl text-white">Loading...</h3>
       {:then user}
         {#if !user.hasPro}
-          <Payments bind:choice={selected} bind:enableSubText={showSubText} on:paymentChanged={UpdatePrice} />
+          <Payments bind:choice={selected} bind:gift bind:enableSubText={showSubText} on:paymentChanged={UpdatePrice} />
         {/if}
       {/await}
     </div>
+    <!-- discord ID -->
+    {#await data.streamed.user then user}
+      <input type="hidden" name="mainUser" value={user.id} />
+    {/await}
   </form>
 {:else}
   <main class="relative grid min-h-screen place-items-center overflow-hidden px-6 py-24 sm:py-32 lg:px-8">

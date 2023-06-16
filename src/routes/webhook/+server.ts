@@ -37,6 +37,24 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
       const session: Stripe.Checkout.Session = webhookEvent.data.object as Stripe.Checkout.Session;
       const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
 
+      const giftUser = session.metadata?.Gift === '' ? null : session.metadata?.Gift;
+
+      let giftUserEmail: string | null = null;
+
+      if (giftUser != null) {
+        const customFields = session.custom_fields;
+        if (customFields != null) {
+          const giftField = customFields.find((field) => field.key === 'Gift');
+          if (giftField != null) {
+            giftUserEmail = giftField.text?.value ?? null;
+          } else {
+            giftUserEmail = null;
+          }
+        } else {
+          giftUserEmail = null;
+        }
+      }
+
       // Store the data in variables for later use when sending the webhook
       // Email
       const customerEmail = session.customer_email || session.customer_details?.email || 'contact@gigi.asap';
@@ -62,61 +80,88 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
       // Footer
       const footer = `Discord ID: ${session.metadata?.DiscordID}${session.livemode === false ? ' | Test Mode: True' : ''}`;
 
+      const requestBody = {
+        username: 'Stripe',
+        avatar_url: 'https://i.vgy.me/DFBwES.png',
+        content: null,
+        embeds: [
+          {
+            title: `Successful Purchase`,
+            color: 2829617,
+            fields: [
+              {
+                name: 'Email:',
+                value: customerEmail,
+                inline: true
+              },
+              {
+                name: 'Discord User:',
+                value: discordUser,
+                inline: true
+              },
+              {
+                name: 'License Tier:',
+                value: tier,
+                inline: true
+              },
+              {
+                name: 'Amount Paid:',
+                value: amountPaid,
+                inline: true
+              },
+              {
+                name: 'Date Purchased:',
+                value: created,
+                inline: true
+              },
+              {
+                name: 'Receipt:',
+                value: receiptLink,
+                inline: true
+              },
+              // Conditionally add the gift fields if the purchase was a gift
+              ...(giftUser != null
+                ? [
+                    {
+                      name: 'Gifted User Email:',
+                      value: giftUserEmail ?? 'N/A',
+                      inline: true
+                    },
+                    {
+                      name: 'Gifted User:',
+                      value: `<@${giftUser}>`,
+                      inline: true
+                    },
+                    {
+                      name: 'Gifted User ID:',
+                      value: giftUser,
+                      inline: true
+                    }
+                  ]
+                : [])
+            ],
+            footer: {
+              text: footer
+            }
+          }
+        ]
+      };
+
+      console.log('Request Body:', requestBody);
+
       // Send the webhook
       const webhook = fetch(`${WEBHOOK_URL}?wait=true`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          username: 'Stripe',
-          avatar_url: 'https://i.vgy.me/DFBwES.png',
-          content: null,
-          embeds: [
-            {
-              title: `Successful Purchase`,
-              color: 2829617,
-              fields: [
-                {
-                  name: 'Email:',
-                  value: customerEmail,
-                  inline: true
-                },
-                {
-                  name: 'Discord User:',
-                  value: discordUser,
-                  inline: true
-                },
-                {
-                  name: 'License Tier:',
-                  value: tier,
-                  inline: true
-                },
-                {
-                  name: 'Amount Paid:',
-                  value: amountPaid,
-                  inline: true
-                },
-                {
-                  name: 'Date Purchased:',
-                  value: created,
-                  inline: true
-                },
-                {
-                  name: 'Receipt:',
-                  value: receiptLink,
-                  inline: true
-                }
-              ],
-              footer: {
-                text: footer
-              }
-            }
-          ]
-        })
+        body: JSON.stringify(requestBody)
       });
 
+      // Log the webhook body before sending to the console
+
       if ((await webhook).status !== 200) {
+        // [object Promise] is returned if the webhook fails to send, so fix that
         return new Response(`Error response from Discord after sending webhook: ${(await webhook).text()}`, { status: 502 });
       }
       return new Response('Created. Purchase logged successfully to Discord.', { status: 201 });
