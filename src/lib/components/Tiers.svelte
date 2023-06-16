@@ -34,7 +34,7 @@
   })();
 </script>
 
-<Section id="tiers" title={sectionTitle} description={sectionDescription}>
+<Section id="tiersSelection" title={sectionTitle} description={sectionDescription}>
   {#await $page.data.streamed.user}
     <Tier loading={true} />
     <Tier loading={true} />
