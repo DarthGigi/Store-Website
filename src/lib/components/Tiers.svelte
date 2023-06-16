@@ -18,31 +18,16 @@
   const handleClick = ({ detail }: { detail: IChoice }) => {
     select(detail.PlanID);
   };
-
-  let sectionTitle = 'Gathering data...';
-  let sectionDescription = '';
-
-  (async () => {
-    const hasPro = await $page.data.streamed.user.hasPro;
-    if (hasPro) {
-      sectionTitle = 'Your License';
-      sectionDescription = '';
-    } else {
-      sectionTitle = 'Tier.';
-      sectionDescription = 'Which is best for you?';
-    }
-  })();
 </script>
 
-<Section id="tiersSelection" title={sectionTitle} description={sectionDescription}>
+<!-- Say Which is best for you? if the user doesn't have pro, else say Which is best for your friend? -->
+<Section id="tiersSelection" title="Tier." description={$page.data.streamed.user.hasPro ? 'Which is best for your friend?' : 'Which is best for you?'}>
   {#await $page.data.streamed.user}
     <Tier loading={true} />
     <Tier loading={true} />
   {:then user}
     {#await $page.data.streamed.plans then}
-      {#if user.hasPro}
-        <Tier id="Pro" disabled description="WatchTower, Themes & more!" bind:price={$page.data.streamed.plans.pro.stripe} />
-      {:else if user.hasEssential}
+      {#if user.hasEssential}
         <Tier id="Upgrade" description="Upgrade to Pro." bind:price={$page.data.streamed.plans.upgrade.stripe} on:click={handleClick} />
       {:else}
         <Tier id="Pro" description="WatchTower, Themes & more!" bind:price={$page.data.streamed.plans.pro.stripe} on:click={handleClick} />
