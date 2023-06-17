@@ -27,14 +27,16 @@
   <meta property="twitter:image" content="/assets/images/store.png" />
 
   <!-- Favicons -->
-  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.sirius.menu/assets/favicons/apple-touch-icon.png?v=3" />
-  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.sirius.menu/assets/favicons/favicon-32x32.png?v=3" />
-  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.sirius.menu/assets/favicons/favicon-16x16.png?v=3" />
-  <link rel="manifest" href="https://cdn.sirius.menu/assets/favicons/site.webmanifest?v=3" />
-  <link rel="mask-icon" href="https://cdn.sirius.menu/assets/favicons/safari-pinned-tab.svg?v=3" color="#000000" />
-  <link rel="shortcut icon" href="https://cdn.sirius.menu/assets/favicons/favicon.ico?v=3" />
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.sirius.menu/assets/favicons/apple-touch-icon.png?v=4" />
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.sirius.menu/assets/favicons/favicon-32x32.png?v=4" />
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.sirius.menu/assets/favicons/favicon-16x16.png?v=4" />
+  <link rel="manifest" href="https://cdn.sirius.menu/assets/favicons/site.webmanifest?v=4" />
+  <link rel="mask-icon" href="https://cdn.sirius.menu/assets/favicons/safari-pinned-tab.svg?v=4" color="#000000" />
+  <link rel="icon" href="https://cdn.sirius.menu/assets/favicons/favicon.ico?v=3" />
+  <link rel="shortcut icon" href="https://cdn.sirius.menu/assets/favicons/favicon.ico?v=4" />
   <meta name="msapplication-TileColor" content="#000000" />
-  <meta name="msapplication-config" content="https://cdn.sirius.menu/assets/favicons/browserconfig.xml?v=3" />
+  <meta name="msapplication-TileImage" content="https://cdn.sirius.menu/assets/favicons/mstile-144x144.png?v=4" />
+  <meta name="msapplication-config" content="https://cdn.sirius.menu/assets/favicons/browserconfig.xml?v=4" />
 </svelte:head>
 
 <slot />
