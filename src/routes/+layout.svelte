@@ -32,7 +32,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.sirius.menu/assets/favicons/favicon-16x16.png?v=4" />
   <link rel="manifest" href="https://cdn.sirius.menu/assets/favicons/site.webmanifest?v=4" />
   <link rel="mask-icon" href="https://cdn.sirius.menu/assets/favicons/safari-pinned-tab.svg?v=4" color="#000000" />
-  <link rel="icon" href="https://cdn.sirius.menu/assets/favicons/favicon.ico?v=3" />
+  <link rel="icon" href="https://cdn.sirius.menu/assets/favicons/favicon.ico?v=4" />
   <link rel="shortcut icon" href="https://cdn.sirius.menu/assets/favicons/favicon.ico?v=4" />
   <meta name="msapplication-TileColor" content="#000000" />
   <meta name="msapplication-TileImage" content="https://cdn.sirius.menu/assets/favicons/mstile-144x144.png?v=4" />
