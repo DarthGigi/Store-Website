@@ -30,7 +30,7 @@
       {#if user.hasEssential}
         <Tier id="Upgrade" description="Upgrade to Pro." bind:price={$page.data.streamed.plans.upgrade.stripe} on:click={handleClick} />
       {:else}
-        <Tier id="Pro" description="WatchTower, Themes & more!" bind:price={$page.data.streamed.plans.pro.stripe} on:click={handleClick} />
+        <Tier id="Pro" description="Sound Suppression, Pro Game Scripts, and more." bind:price={$page.data.streamed.plans.pro.stripe} on:click={handleClick} />
         <Tier id="Essential" description="No Key System, Custom Script Prompts, and more." bind:price={$page.data.streamed.plans.essential.stripe} on:click={handleClick} />
       {/if}
     {/await}
