@@ -168,15 +168,19 @@ export const actions: Actions = {
     // Get the form data
     const data = await request.formData();
     // Get the user's data
-    const mainUser = data.get('mainUser') as User | null;
+    const mainUser = data.get('mainUser') as string;
 
-    if (!mainUser) {
+    const giftUser = data.get('giftUser') === '' ? null : (data.get('giftUser') as string | null);
+
+    if (logged_in == false) {
+      throw error(400, {
+        message: 'User not logged in'
+      });
+    } else if (!mainUser) {
       throw error(400, {
         message: 'Main user not found'
       });
     }
-
-    const giftUser = data.get('giftUser') === '' ? null : (data.get('giftUser') as string | null);
 
     // If the payment method is Stripe, create a Stripe checkout session
     if (data.get('payment') == 'Stripe') {
@@ -252,9 +256,9 @@ export const actions: Actions = {
       // Set the launch data for the Roblox game
       const launchData = encodeURIComponent(
         JSON.stringify({
-          dID: mainUser.id,
-          dN: mainUser.username,
-          dD: mainUser.discriminator
+          dID: user.id,
+          dN: user.username,
+          dD: user.discriminator
         })
       );
       // Open the Roblox game for the user

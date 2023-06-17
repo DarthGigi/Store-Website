@@ -145,7 +145,7 @@
     </div>
     <!-- discord ID -->
     {#await data.streamed.user then user}
-      <input type="hidden" name="mainUser" value={user} />
+      <input type="hidden" name="mainUser" value={user.id} />
     {/await}
   </form>
 {:else}
