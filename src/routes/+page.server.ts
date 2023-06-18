@@ -168,7 +168,7 @@ export const actions: Actions = {
     // Get the form data
     const data = await request.formData();
     // Get the user's data
-    const mainUser = data.get('mainUser') as string;
+    const mainUser: User = JSON.parse(data.get('mainUser') as string);
 
     const giftUser = data.get('giftUser') === '' ? null : (data.get('giftUser') as string | null);
 
@@ -219,7 +219,7 @@ export const actions: Actions = {
         ],
         metadata: {
           // User's Discord ID to identify the user
-          DiscordID: mainUser,
+          DiscordID: mainUser.id,
           Tier: tier,
           Gift: giftUser
         },
@@ -256,9 +256,9 @@ export const actions: Actions = {
       // Set the launch data for the Roblox game
       const launchData = encodeURIComponent(
         JSON.stringify({
-          dID: user.id,
-          dN: user.username,
-          dD: user.discriminator
+          dID: mainUser.id,
+          dN: mainUser.username,
+          dD: mainUser.discriminator
         })
       );
       // Open the Roblox game for the user
