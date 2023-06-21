@@ -1,7 +1,66 @@
-import { ROBLOX_WEBHOOK_SECRET, STRIPE_WEBHOOK_SECRET, WEBHOOK_URL } from '$env/static/private';
+import { ROBLOX_WEBHOOK_SECRET, STRIPE_WEBHOOK_SECRET, WEBHOOK_URL, WHITELIST_URL, LUARMOR_PROJECT, LUARMOR_KEY, DISCORD_BOT_TOKEN } from '$env/static/private';
+import { PUBLIC_DISCORD_API_URL, PUBLIC_SIRIUS_GUILD_ID } from '$env/static/public';
 import { stripe } from '$lib/server/stripe';
 import type Stripe from 'stripe';
 import type { RequestHandler } from './$types';
+let hasNewRole = false;
+let whitelisted = false;
+
+async function whitelistUser(discordID: string | undefined, tier: string) {
+  try {
+    const whitelist = fetch(`${WHITELIST_URL}/projects/${LUARMOR_PROJECT}/users`, {
+      method: 'POST',
+      headers: {
+        authorization: LUARMOR_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        // Pro, Essential or Upgrade
+        note: tier,
+        // Discord ID
+        discord_id: discordID
+      })
+    }).then((res) => res.json());
+
+    console.log(await whitelist);
+    let discord_role_response;
+    if ((await whitelist).success) {
+      whitelisted = true;
+      console.log('Successfully whitelisted user');
+      let roleID;
+      switch (tier) {
+        case 'Pro':
+          roleID = '939872682567151626';
+          break;
+        case 'Essential':
+          roleID = '994723402214543452';
+          break;
+        case 'Upgrade':
+          roleID = '939872682567151626';
+          break;
+        default:
+          roleID = '939559460404351006';
+          break;
+      }
+      // Adds a role to a guild member. Requires the MANAGE_ROLES permission. Returns a 204 empty response on success. Fires a Guild Member Update Gateway event.
+      discord_role_response = await fetch(`${PUBLIC_DISCORD_API_URL}/guilds/${PUBLIC_SIRIUS_GUILD_ID}/members/${discordID}/roles/${roleID}`, {
+        method: 'PUT',
+        headers: {
+          authorization: `Bot ${DISCORD_BOT_TOKEN}`,
+          'X-Audit-Log-Reason': 'Add the correct tier role to the user. From a purchase done through the store.'
+        }
+      });
+
+      // if the user has the new role
+      if (discord_role_response.status === 204) {
+        hasNewRole = true;
+        console.log(`Successfully added the ${tier} role to ${discordID}`);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 export const POST: RequestHandler = async ({ request, fetch }) => {
   // Check the user agent to see if the request is from Stripe or Roblox
@@ -80,6 +139,11 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
       // Footer
       const footer = `Discord ID: ${session.metadata?.DiscordID}${session.livemode === false ? ' | Test Mode: True' : ''}`;
 
+      // the giftuser or the user who bought the product
+      const whitelistingUser = giftUser ?? session.metadata?.DiscordID;
+
+      await whitelistUser(whitelistingUser, tier);
+
       const requestBody = {
         username: 'Stripe',
         avatar_url: 'https://i.vgy.me/DFBwES.png',
@@ -138,7 +202,17 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
                       inline: true
                     }
                   ]
-                : [])
+                : []),
+              {
+                name: 'Whitelist Status:',
+                value: whitelisted ? 'Whitelisted' : 'Not Whitelisted',
+                inline: true
+              },
+              {
+                name: 'Discord Role Status:',
+                value: hasNewRole ? 'Role Added' : 'Role Not Added',
+                inline: true
+              }
             ],
             footer: {
               text: footer
@@ -146,8 +220,6 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
           }
         ]
       };
-
-      console.log('Request Body:', requestBody);
 
       // Send the webhook
       const webhook = fetch(`${WEBHOOK_URL}?wait=true`, {
@@ -194,6 +266,8 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
     // Footer
     const footer = `Discord ID: ${data.discordID} | Roblox ID: ${data.userID}`;
 
+    await whitelistUser(data.discordID, tier);
+
     // Send the webhook
     const webhook = fetch(`${WEBHOOK_URL}?wait=true`, {
       method: 'POST',
@@ -237,6 +311,16 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
               {
                 name: 'Profile:',
                 value: `[View Profile](https://www.roblox.com/users/${data.userID}/inventory/#!/game-passes)`,
+                inline: true
+              },
+              {
+                name: 'Whitelist Status:',
+                value: whitelisted ? 'Whitelisted' : 'Not Whitelisted',
+                inline: true
+              },
+              {
+                name: 'Discord Role Status:',
+                value: hasNewRole ? 'Role Added' : 'Role Not Added',
                 inline: true
               }
             ],
