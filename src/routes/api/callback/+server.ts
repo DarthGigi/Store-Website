@@ -1,7 +1,6 @@
 import { DISCORD_BOT_TOKEN, DISCORD_OAUTH_SECRET } from '$env/static/private';
-import { PUBLIC_DISCORD_OAUTH_ID, PUBLIC_REDIRECT_URI, PUBLIC_SIRIUS_GUILD_ID } from '$env/static/public';
+import { PUBLIC_DISCORD_OAUTH_ID, PUBLIC_REDIRECT_URI, PUBLIC_SIRIUS_GUILD_ID, PUBLIC_DISCORD_API_URL } from '$env/static/public';
 import type { RequestHandler } from './$types';
-const DISCORD_API_URL = 'https://discord.com/api/v10';
 
 export const GET = (async ({ url, cookies }) => {
   const returnCode = url.searchParams.get('code');
@@ -12,7 +11,7 @@ export const GET = (async ({ url, cookies }) => {
     grant_type: 'authorization_code',
     redirect_uri: PUBLIC_REDIRECT_URI,
     code: returnCode as string,
-    scope: 'connections guilds.join guilds.members.read identify'
+    scope: 'guilds.join guilds.members.read identify'
   };
 
   // performing a Fetch request to Discord's token endpoint
@@ -48,13 +47,13 @@ export const GET = (async ({ url, cookies }) => {
     path: '/'
   });
 
-  const discord_response = await fetch(`${DISCORD_API_URL}/users/@me`, {
+  const discord_response = await fetch(`${PUBLIC_DISCORD_API_URL}/users/@me`, {
     headers: {
       authorization: `Bearer ${response.access_token}`
     }
   }).then((res) => res.json());
 
-  await fetch(`${DISCORD_API_URL}/guilds/${PUBLIC_SIRIUS_GUILD_ID}/members/${discord_response.id}`, {
+  await fetch(`${PUBLIC_DISCORD_API_URL}/guilds/${PUBLIC_SIRIUS_GUILD_ID}/members/${discord_response.id}`, {
     method: 'PUT',
     body: JSON.stringify({ refresh_token: cookies.get('refresh_token') }),
     headers: {

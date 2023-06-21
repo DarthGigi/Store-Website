@@ -1,10 +1,9 @@
 import { DISCORD_BOT_TOKEN, DOMAIN, PRICE_ID_ESSENTIAL, PRICE_ID_PRO, PRICE_ID_UPGRADE } from '$env/static/private';
-import { PUBLIC_SIRIUS_GUILD_ID } from '$env/static/public';
+import { PUBLIC_SIRIUS_GUILD_ID, PUBLIC_DISCORD_API_URL } from '$env/static/public';
 import { stripe } from '$lib/server/stripe';
 import type { IPlanPrices } from '$lib/types';
 import { error, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-const DISCORD_API_URL = 'https://discord.com/api/v10';
 
 // User interface
 interface User {
@@ -59,7 +58,7 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
   // If the user has an access token, get their user data
   if (cookies.get('access_token')) {
     // Get the user data from Discord
-    const discord_response = await fetch(`${DISCORD_API_URL}/users/@me`, {
+    const discord_response = await fetch(`${PUBLIC_DISCORD_API_URL}/users/@me`, {
       headers: {
         authorization: `Bearer ${cookies.get('access_token')}`
       }
@@ -74,8 +73,23 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
         discriminator: discord_response.discriminator,
         avatar: discord_response.avatar
       };
+
+      // Make the user join the guild if they're not in it
+      fetch(`${PUBLIC_DISCORD_API_URL}/guilds/${PUBLIC_SIRIUS_GUILD_ID}/members/${discord_response.id}`, {
+        method: 'PUT',
+        headers: {
+          authorization: `Bot ${DISCORD_BOT_TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          access_token: cookies.get('access_token'),
+          nick: user.global_name,
+          roles: ['939559460404351006']
+        })
+      });
+
       // Get the user's roles from the server/guild
-      const guild_response = await fetch(`${DISCORD_API_URL}/guilds/${PUBLIC_SIRIUS_GUILD_ID}/members/${discord_response.id}`, {
+      const guild_response = await fetch(`${PUBLIC_DISCORD_API_URL}/guilds/${PUBLIC_SIRIUS_GUILD_ID}/members/${discord_response.id}`, {
         headers: {
           authorization: `Bot ${DISCORD_BOT_TOKEN}`
         }
