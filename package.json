@@ -12,8 +12,7 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^2.1.0",
-    "@sveltejs/kit": "^1.20.4",
+    "@sveltejs/kit": "^1.20.5",
     "@tailwindcss/forms": "^0.5.3",
     "@types/prismjs": "^1.26.0",
     "@types/uuid": "^9.0.2",
@@ -43,8 +42,7 @@
     "prism-themes": "^1.9.0",
     "prismjs": "^1.29.0",
     "socket.io": "^4.7.0",
-    "stripe": "^12.9.0",
-    "svelte-prism": "^1.1.6",
-    "uuid": "^9.0.0"
+    "stripe": "^12.10.0",
+    "svelte-prism": "^1.1.6"
   }
 }
