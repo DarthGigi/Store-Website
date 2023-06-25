@@ -27,7 +27,10 @@
     <Tier loading={true} />
   {:then user}
     {#await $page.data.streamed.plans then}
-      {#if user.hasEssential}
+      {#if user.hasPro}
+        <Tier id="Pro" description="Sound Suppression, Pro Scripts, and more." bind:price={$page.data.streamed.plans.pro.stripe} on:click={handleClick} />
+        <Tier id="Essential" description="No Key System, Custom Script Prompts, and more." bind:price={$page.data.streamed.plans.essential.stripe} on:click={handleClick} />
+      {:else if user.hasEssential}
         <Tier id="Upgrade" description="Upgrade to Pro." bind:price={$page.data.streamed.plans.upgrade.stripe} on:click={handleClick} />
       {:else}
         <Tier id="Pro" description="Sound Suppression, Pro Scripts, and more." bind:price={$page.data.streamed.plans.pro.stripe} on:click={handleClick} />
