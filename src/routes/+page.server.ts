@@ -84,7 +84,7 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
         body: JSON.stringify({
           access_token: cookies.get('access_token'),
           nick: user.global_name,
-          roles: ['939559460404351006']
+          roles: ['1123954353825390612']
         })
       });
 
@@ -98,8 +98,8 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
       // If the user has roles, set the user's roles
       if (guild_response.roles) {
         user.roles = guild_response.roles;
-        user.hasPro = user.roles?.includes('939872682567151626');
-        user.hasEssential = user.roles?.includes('994723402214543452');
+        user.hasPro = user.roles?.includes('1123955765900755015');
+        user.hasEssential = user.roles?.includes('1123955581095518348');
       }
       logged_in = true;
     }

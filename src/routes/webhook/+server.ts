@@ -30,16 +30,16 @@ async function whitelistUser(discordID: string | undefined, tier: string) {
       let roleID;
       switch (tier) {
         case 'Pro':
-          roleID = '939872682567151626';
+          roleID = '1123955765900755015';
           break;
         case 'Essential':
-          roleID = '994723402214543452';
+          roleID = '1123955581095518348';
           break;
         case 'Upgrade':
-          roleID = '939872682567151626';
+          roleID = '1123955765900755015';
           break;
         default:
-          roleID = '939559460404351006';
+          roleID = '1123954353825390612';
           break;
       }
       // Adds a role to a guild member. Requires the MANAGE_ROLES permission. Returns a 204 empty response on success. Fires a Guild Member Update Gateway event.
@@ -234,6 +234,7 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
 
       if ((await webhook).status !== 200) {
         // [object Promise] is returned if the webhook fails to send, so fix that
+        console.log(`Error response from Discord after sending webhook: ${(await webhook).text()}`);
         return new Response(`Error response from Discord after sending webhook: ${(await webhook).text()}`, { status: 502 });
       }
       return new Response('Created. Purchase logged successfully to Discord.', { status: 201 });
