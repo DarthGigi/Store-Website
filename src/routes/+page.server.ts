@@ -244,10 +244,10 @@ export const actions: Actions = {
         submit_type: 'pay',
         currency: currency,
         allow_promotion_codes: false,
-        // automatic_tax: {
-        //   enabled: true
-        // },
-        // billing_address_collection: 'required',
+        automatic_tax: {
+          enabled: true
+        },
+        billing_address_collection: 'required',
         custom_fields: giftUser
           ? [
               {
