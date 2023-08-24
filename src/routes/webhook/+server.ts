@@ -335,12 +335,12 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
 
     // Return a 500 if the webhook failed to send
     if ((await webhook).status !== 200) {
-      return new Response(`Error response from Discord after sending webhook: ${(await webhook).text()}`, { status: 502 });
+      return new Response(`Error response from Discord after sending webhook: ${(await webhook).text()}`, { status: 502, headers: { 'Access-Control-Allow-Origin': '*' } });
     }
     // Return a 201 if the webhook was sent successfully
-    return new Response('Created. Purchase logged successfully to Discord.', { status: 201 });
+    return new Response('Created. Purchase logged successfully to Discord.', { status: 201, headers: { 'Access-Control-Allow-Origin': '*' } });
   } else {
     // Return a 400 if the request is not from Stripe or Roblox
-    return new Response('Bad Request', { status: 400 });
+    return new Response('Bad Request', { status: 400, headers: { 'Access-Control-Allow-Origin': '*' } });
   }
 };
