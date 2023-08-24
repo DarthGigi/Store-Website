@@ -110,7 +110,7 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
   }
   // If the user doesn't have an access token, that means they're not logged in, set logged_in to false
   else {
-    logged_in = false;
+    return (logged_in = false);
   }
 
   // Get the prices of the plans
