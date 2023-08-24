@@ -6,7 +6,7 @@ import type { RequestHandler } from './$types';
 let hasNewRole = false;
 let whitelisted = false;
 
-async function whitelistUser(discordID: string | undefined, tier: string) {
+async function whitelistUser(discordID: string, tier: string) {
   try {
     const whitelist = fetch(`${WHITELIST_URL}/projects/${LUARMOR_PROJECT}/users`, {
       method: 'POST',
@@ -16,9 +16,9 @@ async function whitelistUser(discordID: string | undefined, tier: string) {
       },
       body: JSON.stringify({
         // Pro, Essential or Upgrade
-        note: tier,
+        note: tier.toString(),
         // Discord ID
-        discord_id: discordID
+        discord_id: discordID.toString()
       })
     }).then((res) => res.json());
 
@@ -140,7 +140,7 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
       const footer = `Discord ID: ${session.metadata?.DiscordID}${session.livemode === false ? ' | Test Mode: True' : ''}`;
 
       // the giftuser or the user who bought the product
-      const whitelistingUser = giftUser ?? session.metadata?.DiscordID;
+      const whitelistingUser = giftUser ?? session.metadata?.DiscordID ?? 'Discord ID not found';
 
       await whitelistUser(whitelistingUser, tier);
 
@@ -250,6 +250,8 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
 
     // Get the data from the request
     const data = await request.json();
+
+    console.log(data);
 
     // Store the data in variables for later use when sending the webhook
     // Username
