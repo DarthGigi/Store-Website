@@ -13,7 +13,7 @@
 {#if loading === false}
   <dl class="mt-5 gap-5">
     <div class={`group relative w-full overflow-hidden rounded-lg border border-neutral-700 border-opacity-40 bg-[#050505] bg-cover bg-center bg-no-repeat px-4 py-5 shadow sm:p-6 ${$$props.class}`}>
-      <img src="https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}?size=16" alt="User Avatar Blurred" class="absolute inset-0 h-[75px] max-h-[100px] w-[100px] max-w-[100px] translate-x-[325%] translate-y-[50%] scale-[5] rounded-full bg-gradient-to-r blur-lg transition-all duration-500 will-change-transform group-hover:scale-150 group-active:group-hover:scale-125 group-active:group-hover:duration-200 group-[:checked+&]:scale-150" />
+      <img src="https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}?size=256" alt="User Avatar Blurred" class="absolute inset-0 h-[75px] max-h-[100px] w-[100px] max-w-[100px] translate-x-[325%] translate-y-[50%] scale-[5] rounded-full bg-gradient-to-r blur-lg transition-all duration-500 will-change-transform group-hover:scale-150 group-active:group-hover:scale-125 group-active:group-hover:duration-200 group-[:checked+&]:scale-150" />
       <div class="relative z-20">
         <dd class="mt-1 flex flex-row justify-between text-3xl font-semibold tracking-tight text-white">
           <p class="flex flex-col">
