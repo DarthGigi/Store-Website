@@ -271,8 +271,7 @@ export const actions: Actions = {
       const launchData = encodeURIComponent(
         JSON.stringify({
           dID: mainUser.id,
-          dN: mainUser.username,
-          dD: mainUser.discriminator
+          dN: mainUser.username
         })
       );
       // Open the Roblox game for the user
