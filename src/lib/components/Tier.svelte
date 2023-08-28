@@ -3,6 +3,7 @@
   import { page } from '$app/stores';
 
   export let id = '';
+  export let title = '';
   export let description = '';
   export let price = 0;
   export let disabled = false;
@@ -12,21 +13,21 @@
   let y: string;
 
   switch (id.toLowerCase()) {
-    case 'pro': {
+    case 'tier1': {
       blobColor = 'from-pink-500 to-blue-600';
       x = '10';
       y = '-10';
       break;
     }
 
-    case 'essential': {
+    case 'tier2': {
       blobColor = 'from-emerald-500 to-blue-600';
       x = '300';
       y = '60';
       break;
     }
 
-    case 'upgrade': {
+    case 'tier3': {
       blobColor = 'from-orange-500 to-blue-600';
       x = '180';
       y = '-40';
@@ -65,7 +66,7 @@
         <span class="z-20 flex w-full cursor-pointer justify-between text-center leading-5 tracking-tight">
           <span class="relative m-0 min-w-0 basis-1/2 cursor-pointer self-center p-0 text-left leading-5 tracking-tight">
             <span class="cursor-pointer text-left text-2xl font-semibold leading-5 tracking-tight text-white">
-              {id}
+              {title}
               <span class="relative mt-1 block cursor-pointer text-left text-xs font-normal tracking-normal opacity-70">{description}</span>
             </span>
           </span>

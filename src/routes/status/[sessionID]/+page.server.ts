@@ -12,7 +12,7 @@ export const load = (async ({ params, fetch }) => {
       user = response.metadata.Gift ?? response.metadata.DiscordID;
       title = 'Success.';
       pageTitle = 'Success';
-      message = 'We have issued a request for your Sirius license to be added to your Discord account, this should only take a few minutes.';
+      message = 'We have issued a request for your license to be added to your Discord account, this should only take a few minutes.';
       key = await fetch(`${WHITELIST_URL}/projects/${LUARMOR_PROJECT}/users?discord_id=${await user}`, {
         headers: {
           authorization: LUARMOR_KEY

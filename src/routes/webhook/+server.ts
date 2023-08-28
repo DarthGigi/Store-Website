@@ -1,5 +1,5 @@
 import { ROBLOX_WEBHOOK_SECRET, STRIPE_WEBHOOK_SECRET, WEBHOOK_URL, WHITELIST_URL, LUARMOR_PROJECT, LUARMOR_KEY, DISCORD_BOT_TOKEN } from '$env/static/private';
-import { PUBLIC_DISCORD_API_URL, PUBLIC_SIRIUS_GUILD_ID } from '$env/static/public';
+import { PUBLIC_DISCORD_API_URL, PUBLIC_GUILD_ID } from '$env/static/public';
 import { stripe } from '$lib/server/stripe';
 import type Stripe from 'stripe';
 import type { RequestHandler } from './$types';
@@ -29,21 +29,21 @@ async function whitelistUser(discordID: string, tier: string) {
       console.log('Successfully whitelisted user');
       let roleID;
       switch (tier) {
-        case 'Pro':
-          roleID = '1123955765900755015';
+        case 'TierName':
+          roleID = 'ROLEID';
           break;
-        case 'Essential':
-          roleID = '1123955581095518348';
+        case 'TierName':
+          roleID = 'ROLEID';
           break;
-        case 'Upgrade':
-          roleID = '1123955765900755015';
+        case 'TierName':
+          roleID = 'ROLEID';
           break;
         default:
-          roleID = '1123954353825390612';
+          roleID = 'ROLEID';
           break;
       }
       // Adds a role to a guild member. Requires the MANAGE_ROLES permission. Returns a 204 empty response on success. Fires a Guild Member Update Gateway event.
-      discord_role_response = await fetch(`${PUBLIC_DISCORD_API_URL}/guilds/${PUBLIC_SIRIUS_GUILD_ID}/members/${discordID}/roles/${roleID}`, {
+      discord_role_response = await fetch(`${PUBLIC_DISCORD_API_URL}/guilds/${PUBLIC_GUILD_ID}/members/${discordID}/roles/${roleID}`, {
         method: 'PUT',
         headers: {
           authorization: `Bot ${DISCORD_BOT_TOKEN}`,
@@ -119,7 +119,7 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
       const customerEmail = session.customer_email || session.customer_details?.email || 'contact@gigi.asap';
 
       // Discord ID
-      const discordUser = `<@${session.metadata?.DiscordID ?? 'This purchase was probably not made via store.sirius.menu.'}>`;
+      const discordUser = `<@${session.metadata?.DiscordID ?? 'This purchase was probably not made via store.example.com.'}>`;
 
       // Tier
       const tier = session.metadata?.Tier || lineItems.data[0].description;

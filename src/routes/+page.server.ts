@@ -1,5 +1,5 @@
-import { DISCORD_BOT_TOKEN, DOMAIN, PRICE_ID_ESSENTIAL, PRICE_ID_PRO, PRICE_ID_UPGRADE } from '$env/static/private';
-import { PUBLIC_SIRIUS_GUILD_ID, PUBLIC_DISCORD_API_URL } from '$env/static/public';
+import { DISCORD_BOT_TOKEN, DOMAIN, PRICE_ID_1, PRICE_ID_2, PRICE_ID_3 } from '$env/static/private';
+import { PUBLIC_GUILD_ID, PUBLIC_DISCORD_API_URL } from '$env/static/public';
 import { stripe } from '$lib/server/stripe';
 import type { IPlanPrices } from '$lib/types';
 import { error, redirect } from '@sveltejs/kit';
@@ -13,8 +13,8 @@ interface User {
   discriminator: string;
   avatar: string;
   roles?: string[];
-  hasPro?: boolean;
-  hasEssential?: boolean;
+  hasTierHigh?: boolean;
+  hasTierMed?: boolean;
 }
 
 // Global variables to store the user data and the currency so it can be used in the actions when user submits the form
@@ -75,7 +75,7 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
       };
 
       // Make the user join the guild if they're not in it
-      fetch(`${PUBLIC_DISCORD_API_URL}/guilds/${PUBLIC_SIRIUS_GUILD_ID}/members/${discord_response.id}`, {
+      fetch(`${PUBLIC_DISCORD_API_URL}/guilds/${PUBLIC_GUILD_ID}/members/${discord_response.id}`, {
         method: 'PUT',
         headers: {
           authorization: `Bot ${DISCORD_BOT_TOKEN}`,
@@ -84,12 +84,12 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
         body: JSON.stringify({
           access_token: cookies.get('access_token'),
           nick: user.global_name,
-          roles: ['1123954353825390612']
+          roles: ['ROLESID']
         })
       });
 
       // Get the user's roles from the server/guild
-      const guild_response = await fetch(`${PUBLIC_DISCORD_API_URL}/guilds/${PUBLIC_SIRIUS_GUILD_ID}/members/${discord_response.id}`, {
+      const guild_response = await fetch(`${PUBLIC_DISCORD_API_URL}/guilds/${PUBLIC_GUILD_ID}/members/${discord_response.id}`, {
         headers: {
           authorization: `Bot ${DISCORD_BOT_TOKEN}`
         }
@@ -98,8 +98,8 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
       // If the user has roles, set the user's roles
       if (guild_response.roles) {
         user.roles = guild_response.roles;
-        user.hasPro = user.roles?.includes('1123955765900755015');
-        user.hasEssential = user.roles?.includes('1123955581095518348');
+        user.hasTierHigh = user.roles?.includes('ROLEID');
+        user.hasTierMed = user.roles?.includes('ROLEID');
       }
       logged_in = true;
     }
@@ -114,31 +114,32 @@ export const load = (async ({ getClientAddress, cookies, request }) => {
   }
 
   // Get the prices of the plans
+
   const plans: IPlanPrices = {
-    pro: {
+    tier1: {
       // Get the price data from Stripe
       stripe: ((priceData) => {
         const unitAmount = priceData.unit_amount != null ? priceData.unit_amount / 100 : 'Error';
         return unitAmount;
-      })(await stripe.prices.retrieve(PRICE_ID_PRO)),
+      })(await stripe.prices.retrieve(PRICE_ID_2)),
       // Get the price data from Roblox
-      robux: (await fetch('https://apis.roblox.com/game-passes/v1/game-passes/181940005/product-info').then((res) => res.json())).PriceInRobux
+      robux: (await fetch('https://apis.roblox.com/game-passes/v1/game-passes/ID/product-info').then((res) => res.json())).PriceInRobux
     },
-    essential: {
+    tier2: {
       // Get the price data from Stripe
       stripe: ((priceData) => {
         const unitAmount = priceData.unit_amount != null ? priceData.unit_amount / 100 : 'Error';
         return unitAmount;
-      })(await stripe.prices.retrieve(PRICE_ID_ESSENTIAL)),
+      })(await stripe.prices.retrieve(PRICE_ID_1)),
       // Get the price data from Roblox
-      robux: (await fetch('https://apis.roblox.com/game-passes/v1/game-passes/181940072/product-info').then((res) => res.json())).PriceInRobux
+      robux: (await fetch('https://apis.roblox.com/game-passes/v1/game-passes/ID/product-info').then((res) => res.json())).PriceInRobux
     },
-    upgrade: {
+    tier3: {
       // Get the price data from Stripe
       stripe: ((priceData) => {
         const unitAmount = priceData.unit_amount != null ? priceData.unit_amount / 100 : 'Error';
         return unitAmount;
-      })(await stripe.prices.retrieve(PRICE_ID_UPGRADE)),
+      })(await stripe.prices.retrieve(PRICE_ID_3)),
       robux: ''
     },
     none: {
@@ -210,13 +211,13 @@ export const actions: Actions = {
       // Get the price ID based on the tier
       switch (tier.toLowerCase()) {
         case 'pro':
-          priceId = PRICE_ID_PRO;
+          priceId = PRICE_ID_2;
           break;
         case 'essential':
-          priceId = PRICE_ID_ESSENTIAL;
+          priceId = PRICE_ID_1;
           break;
         case 'upgrade':
-          priceId = PRICE_ID_UPGRADE;
+          priceId = PRICE_ID_3;
           break;
         default:
           // Handle the case when tier is not one of the expected options
@@ -275,7 +276,7 @@ export const actions: Actions = {
         })
       );
       // Open the Roblox game for the user
-      throw redirect(303, `roblox://placeId=13567101560&launchData=${launchData}`);
+      throw redirect(303, `roblox://placeId=IDHERE&launchData=${launchData}`);
     }
   }
 };

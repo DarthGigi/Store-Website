@@ -52,12 +52,12 @@
         <div>
           <h2 class="m-0 p-0 text-left text-2xl font-semibold tracking-wide">
             {#await data.streamed.user}
-              <span class="flex flex-row items-center !font-sfdisplay text-2xl font-semibold leading-7 text-white">
+              <span class="flex flex-row items-center text-2xl font-semibold leading-7 text-white">
                 Purchasing as
                 <span class="ml-2 inline-flex h-6 w-20 animate-pulse rounded bg-neutral-700/40" />
               </span>
             {:then user}
-              <span class="!font-sfdisplay text-2xl font-semibold leading-7 text-white">
+              <span class="text-2xl font-semibold leading-7 text-white">
                 Purchasing as
                 <span class="text-neutral-400">
                   {user.global_name || user.username}
@@ -80,13 +80,13 @@
         />
       </section>
       <Section id="gifting" title="Feeling Generous?" class="flex !hidden h-screen flex-col justify-center">
-        <p class="-mt-[1px] mb-2 text-base text-white/40">Buying Sirius for a friend? Enter your friend's Discord ID below to gift a license to them</p>
+        <p class="-mt-[1px] mb-2 text-base text-white/40">Buying for a friend? Enter your friend's Discord ID below to gift a license to them</p>
         <Input
           id="gift"
           type="number"
           name="giftUser"
           placeholder="Discord ID"
-          required={data.streamed.user.hasPro ? true : false}
+          required={data.streamed.user.hasTierHigh ? true : false}
           on:input={() => {
             const giftInput = document.getElementById('gift');
             const giftBtn = document.getElementById('giftBtn');
@@ -111,10 +111,10 @@
                 gift = true;
               }
             } else {
-              giftBtn.innerHTML = data.streamed.user.hasPro ? 'Continue' : 'Skip';
+              giftBtn.innerHTML = data.streamed.user.hasTierHigh ? 'Continue' : 'Skip';
               // disable the button if the user has pro
               // @ts-expect-error - disabled is a valid property
-              giftBtn.disabled = data.streamed.user.hasPro ? true : false;
+              giftBtn.disabled = data.streamed.user.hasTierHigh ? true : false;
               giftAlert.classList.add('!opacity-0');
               gift = false;
             }
@@ -131,12 +131,12 @@
         <div class="flex flex-row-reverse justify-between">
           <Button
             id="giftBtn"
-            disabled={data.streamed.user.hasPro ? true : false}
+            disabled={data.streamed.user.hasTierHigh ? true : false}
             on_click={() => {
               ShowPaymentMethods();
             }}
           >
-            {data.streamed.user.hasPro ? 'Continue' : 'Skip'}
+            {data.streamed.user.hasTierHigh ? 'Continue' : 'Skip'}
           </Button>
           <p id="giftAlert" class="mt-3 text-base text-white !opacity-0 opacity-20 transition-opacity duration-300">Gifting is enabled</p>
         </div>
@@ -154,7 +154,7 @@
     <div class="relative z-10 flex max-w-lg flex-col">
       <div class="text-left">
         <h1 class="mt-4 text-3xl font-bold tracking-tight text-neutral-200 sm:text-5xl">Welcome</h1>
-        <p id="desc" class="mt-2 text-base leading-7 text-white opacity-40">Before continuing to the Sirius Store, you'll need to connect Sirius to your Discord account using the login button below.</p>
+        <p id="desc" class="mt-2 text-base leading-7 text-white opacity-40">Before continuing to the store, you'll need to connect to your Discord account using the login button below.</p>
       </div>
       <div class="mt-11 flex items-center justify-end">
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->

@@ -4,9 +4,9 @@ interface ServicePrices {
 }
 export interface IPlanPrices {
   [index: string]: ServicePrices;
-  pro: ServicePrices;
-  essential: ServicePrices;
-  upgrade: ServicePrices;
+  tier1: ServicePrices;
+  tier2: ServicePrices;
+  tier3: ServicePrices;
 }
 
 export interface IChoice {

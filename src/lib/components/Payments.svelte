@@ -19,6 +19,7 @@
     enableSubText = true;
   };
   const handleClick = ({ detail }: { detail: { id: string; price: number } }) => {
+    console.log(detail);
     select(detail);
   };
 </script>
@@ -27,7 +28,7 @@
 <Section id="payment" title="Payment." description="Which method suits you?" class="flex !hidden h-screen flex-col justify-center opacity-30">
   <PaymentCard size="long">
     <Payment id="Stripe" plan={choice.PlanID} description="Apple Pay, Google Pay, Card, iDeal" x="100" y="200" on:click={handleClick} />
-    {#if !$page.data.streamed.user.hasEssential}
+    {#if !$page.data.streamed.user.hasTierMed}
       <Payment id="Robux" plan={choice.PlanID} on:click={handleClick} x="50" y="200" class={gift ? 'hidden' : ''} />
     {/if}
   </PaymentCard>

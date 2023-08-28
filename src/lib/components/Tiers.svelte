@@ -16,25 +16,26 @@
     enablePlan = true;
   };
   const handleClick = ({ detail }: { detail: IChoice }) => {
+    console.log(detail);
     select(detail.PlanID);
   };
 </script>
 
-<!-- Say Which is best for you? if the user doesn't have pro, else say Which is best for your friend? -->
-<Section id="tiersSelection" title="Tier." description={$page.data.streamed.user.hasPro ? 'Which is best for your friend?' : 'Which is best for you?'}>
+<!-- Say Which is best for you? if the user doesn't have TierHigh, else say Which is best for your friend? -->
+<Section id="tiersSelection" title="Tier." description={$page.data.streamed.user.hasTierHigh ? 'Which is best for your friend?' : 'Which is best for you?'}>
   {#await $page.data.streamed.user}
     <Tier loading={true} />
     <Tier loading={true} />
   {:then user}
     {#await $page.data.streamed.plans then}
-      {#if user.hasPro}
-        <Tier id="Pro" description="Sound Suppression, Pro Scripts, and more." bind:price={$page.data.streamed.plans.pro.stripe} on:click={handleClick} />
-        <Tier id="Essential" description="No Key System, Custom Script Prompts, and more." bind:price={$page.data.streamed.plans.essential.stripe} on:click={handleClick} />
-      {:else if user.hasEssential}
-        <Tier id="Upgrade" description="Upgrade to Pro." bind:price={$page.data.streamed.plans.upgrade.stripe} on:click={handleClick} />
+      {#if user.hasTierHigh}
+        <Tier id="tier1" title="Tier 1" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit." bind:price={$page.data.streamed.plans.tier1.stripe} on:click={handleClick} />
+        <Tier id="tier2" title="Tier 2" description="Feature 1, feature 2, feature 3." bind:price={$page.data.streamed.plans.tier2.stripe} on:click={handleClick} />
+      {:else if user.hasTierMed}
+        <Tier id="tier3" title="Tier 3" description="Upgrade to TierHigh." bind:price={$page.data.streamed.plans.tier3.stripe} on:click={handleClick} />
       {:else}
-        <Tier id="Pro" description="Sound Suppression, Pro Scripts, and more." bind:price={$page.data.streamed.plans.pro.stripe} on:click={handleClick} />
-        <Tier id="Essential" description="No Key System, Custom Script Prompts, and more." bind:price={$page.data.streamed.plans.essential.stripe} on:click={handleClick} />
+        <Tier id="tier1" title="Tier 1" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit." bind:price={$page.data.streamed.plans.tier1.stripe} on:click={handleClick} />
+        <Tier id="tier2" title="Tier 2" description="Feature 1, feature 2, feature 3." bind:price={$page.data.streamed.plans.tier2.stripe} on:click={handleClick} />
       {/if}
     {/await}
   {/await}
